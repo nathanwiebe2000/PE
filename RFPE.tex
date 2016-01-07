@@ -243,8 +243,7 @@ distribution over the phase. The mean and standard deviation of this
 distribution provide an estimate of the true eigenvalue and the algorithm's
 uncertainty in that value. More sophisticated estimates of uncertainty, such
 as credible regions, can also be extracted from the posterior
-distribution~\cite{granade_robust_2012,ferrie_high_2014}. Estimates of
-the uncertainty are crucial here because we use them to design highly informative experiments 
+distribution~\cite{granade_robust_2012,ferrie_high_2014}.  Uncertainty estimates are crucial for the experiment design phase of  RFPE
  and also because they allow the protocol to be terminated when a threshold accuracy has been reached.
 
 \begin{figure}[t!]
@@ -282,9 +281,7 @@ quantum information experiments
 overcoming this limitation presents a
 significant advantage to modern experiment design. 
 
-We propose
- a much simpler approach that we call Rejection Filtering Phase
-Estimation (RFPE). Rather than using a set of hypotheses that implicitly
+RFPE follows a much simpler approach. Rather than using a set of hypotheses that implicitly
 define a model for the system, we posit a prior model and directly update it
 to find a model for our posterior distribution.  We achieve this by using a
 Gaussian with mean $\mu$ and variance $\sigma^2$ to model our initial prior, perform a Bayesian update on samples
@@ -469,9 +466,9 @@ regime and IPE becomes increasingly impractical in lieu of fault-tolerance.
 In particular, the ability of our algorithm to learn in the presence of decoherence provides an efficient alternative to the
 variational eigensolvers used in present day experiments~\cite{PMS+14,MBL+14,WHT15}.  
 
-Looking at the problem of phase estimation more generally, it is clear that it is in essence an inference problem.
-Our work shows that modern ideas from machine learning can be used therein to great effect.  
-It is our firm belief that by combining the tools of data science with clever experimental design,
+Looking at the problem of phase estimation more generally, it is clear that approximate Bayesian inference
+provides a powerful and flexible platform to perform phase estimation within.
+It is our firm belief that by combining such tools with clever experimental design,
 further improvements can be seen not only in phase estimation but also quantum metrology in general.
 
 \acknowledgments{We thank B. Terhal, K. Rudinger and D. Wecker for useful comments.}
@@ -1076,6 +1073,34 @@ strong evidence for an $O(\log(1/\epsilon))$ scaling.
 \includegraphics{longPE.pdf}
 \caption{Median and $95\%$ confidence interval (dashed lines) for the error as a function of the number of experiments performed to infer an unknown phase.}\label{fig:small}
 \end{figure}
+
+%=============================================================================
+\section{Time--dependent Eigenphases}
+\label{app:timedep}
+%=============================================================================
+Another important capability that RFPE inherits from particle filter methods is the ability to track the variation of slowly changing eigenphases.
+This is significant if RFPE is being used, for example, to learn an instantaneous model for a quantum device whose Hamiltonian (or control) parameters
+are slowly drifting out of calibration.  By learning such drifts in an online fashion, this algorithm allows adaptive feedback to compensate for this
+drift and in turn can allow the quantum device to be used even if it has substantially changed since the experimental run began.
+
+Before continuing it is important to distinguish between two ways that time--dependent Eigenphases can be examined.  The simplest approach is through hyperparameter estimation, wherein the inference process is used to learn a hyperparameter that describes the diffusion of the true eigenphase.  This can be done by introducing such a parameter into the inference problem and applying RFPE as above.  The method we favor here is different: we wish to provide an instantaneous estimate of the eigenphase.  This yields no explicit information about the extent to which eigenphases diffuse in typical cases, but it does provide the information needed to track the current value.
+
+In principle including time--dependence in this manner is trivial since it does not require positing a dynamical model for the model parameters (unlike the hyperparameterized version).
+It simply involves running RFPE without modification since ideally the algorithm should continue to track the eigenphase provided the experimental drift does not take the system beyond the 
+domain of support of the prior distribution.  Such issues can be dealt with by the random restarting heuristic discussed previously.
+
+The model of drift that we use is for drift strength $\eta$ and correlation time $\tau$, if time $M$ is taken for experiment $k$ then the eigenphase $\phi_k$ is translated according to
+\begin{equation}
+\phi_k \mapsto \phi_k + \eta\sqrt{M/\tau}x,
+\end{equation}
+where $x$ is a Gaussian random variable with zero mean and unit standard deviation.  We avoid applying the error correction method described above by updating the posterior variance given by adding in the variance introduced by the drift due to $\eta \ne 0$.
+
+\begin{figure}
+\includegraphics[width=0.6\linewidth]{Timedep.pdf}
+\caption{Error in eigenphase as a function of the evolution time (the total sum of all $M$ taken for the case where $M$ is continuous) for $\tau=100$.}\label{fig:Timedep}
+\end{figure}
+
+We see in~\fig{Timedep} that the error in the unknown eigenphase does not diverge with time.  Rather, it saturates at a level that is proportional to $\eta$.  This illustrates that RFPE is capable of tracking a time dependent eigenphase, although the drift in that eigenphase places limitations on the precision of the \emph{instantaneous} estimate of the phase.
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
