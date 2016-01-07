@@ -177,7 +177,7 @@ The need for efficient PE algorithms is especially poignant for Shor's algorithm
 for the algorithm to be practical, the PE algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.  This
 excludes many existing PE methods that achieve logarithmic scaling.  Other methods  are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren.
 
-Here we address this gap by proposing a new approach to iterative phase estimation that is based on a new approximate inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
+Here we address this gap by proposing a new approach to iterative phase estimation that is based on a new approximate inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 is robust to experimental imperfections such as depolarizing noise  and
 small systematic errors, reports the uncertainty in the estimate of the phase, can track time-dependent phases and can be employed in a memory limited environment like in an FPGA.
 
@@ -256,8 +256,7 @@ the uncertainty are crucial here because we use them to design highly informativ
     }
 \end{figure}
 
-\fig{rms} examines the performance of RFPE as a function of the total evolution number of applications of $U$ needed to achieve an error threshold.
-The data conforms to the $O(1/T)$ scaling expected from the Heisenberg bound.  Further details are given in the appendix.
+
 
 
 
@@ -361,6 +360,8 @@ This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of mag
 %time required saturates the Heisenberg limit, up to a multiplicative constant.
 %Specifically, $\lambda\approx 0.17$ for RFPE.
 
+
+
 \fig{ITPEcmp} compares RFPE to the information-theory PE (ITPE) method of Svore~\etal.  Although ITPE is inefficient and is non--adaptive, it is exact and so it is a natural benchmark to compare RFPE against.  We find  ITPE requires nearly five times the applications of $U$ if $\phi=2\pi k/t$ for integer $k<t$ and $t=10~000$.  
 
 \begin{figure}[t!]
@@ -394,8 +395,13 @@ tradeoff experimental and computational resources differently.  This is especial
     }
 \end{figure*}
 
+If we instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
+then we recover the  (or in the case where $M$ is continuous, the total evolution time required).
+In this case, we expect from the Heisenberg bound that the root-mean-square error should optimally scale as $1/M$.
+We see in~\fig{rms} that, over $50$ orders of magnitude in the desired error tolerance, this scaling is saturated for RFPE.
 
-
+%\fig{rms} examines the performance of RFPE as a function of the total evolution number of applications of $U$ needed to achieve an error threshold.
+%The data conforms to the $O(1/T)$ scaling expected from the Heisenberg bound.  Further details are given in the appendix.
 
 
 \subsection{Phase estimation with depolarizing noise}
@@ -424,10 +430,7 @@ We choose $M$ to cut off at $T_2$ in part because the locally optimized solution
 
 \fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Decoherence therefore does not necessarily impose a fundamental limitation on the accuracy that PE can achieve.  \fig{T2plot} also shows that confining the experiments to stay in a more coherent regime also can actually hurt the algorithm's ability to infer the phase, as expected.
 
-If we instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
-then we recover the  (or in the case where $M$ is continuous, the total evolution time required).
-In this case, we expect from the Heisenberg bound that the root-mean-square error should optimally scale as $1/M$.
-We see in figure that, over $50$ orders of magnitude in the desired error tolerance, this scaling is saturated for RFPE.
+
 
 %=============================================================================
 \section{Tracking Eigenphases}
@@ -1058,6 +1061,21 @@ In practice,
 however, because $\Pr(\text{result} = 1 | \text{prior correct}) \approx 0$, the reset
 rule is only weakly dependent on the specific threshold one places on $L$.
 
+\section{RFPE for small error tolerances}
+While most of the previous data examined RFPE for relatively small error tolerances, we must examine the behavior of the algorithm for extremely
+small error tolerances in order to distinguish the $O(\log(1/\epsilon))$ ideal scaling of the error versus the number of experiments and the
+$O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's phase estimation algorithm.  As discussed previously, we use an error correction scheme
+to ensure that the inference algorithm continues to converge to the correct value inspite of surprising results which can confuse the algorithm.
+
+We see in~\fig{small} that the error clearly follows a logarithmic scaling over this range, with no evidence of $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling.  While we cannot formally
+exclude such a scaling on theoretical grounds (owing to the heuristic nature of the algorithm), the robustness of the inference procedure over so many orders of magnitude provides
+strong evidence for an $O(\log(1/\epsilon))$ scaling.
+
+
+\begin{figure}[t!]
+\includegraphics{longPE.pdf}
+\caption{Median and $95\%$ confidence interval (dashed lines) for the error as a function of the number of experiments performed to infer an unknown phase.}\label{fig:small}
+\end{figure}
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
