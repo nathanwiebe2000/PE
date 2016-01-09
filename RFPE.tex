@@ -325,8 +325,8 @@ which implies that the accepted samples are drawn from the posterior distributio
 Although it is difficult to concretely predict the value of $m$ needed to make the error in the inference small, we show in \app{stability} that $m$ must scale at least as the inverse square of the relative fluctuations in the likelihood function.  Similarly, Markov's inequality shows that $m$ must scale at least as $\kappa_E/\int P(E|\phi;\theta,M)P(\phi) \mathrm{d}\phi$ to ensure that, with high probability, the mean can be accurately estimated from the accepted samples.  We introduce $\kappa_E$ to compensate for small expected likelihoods.
 
 \begin{figure}[t!]
-\includegraphics[width=0.7\linewidth]{Longpet2.png}
-\caption{Error vs evolution time for rejection filter phase estimation for the case where $M$ is continuous and can be interpreted as the experimental time taken.}\label{fig:rms}
+\includegraphics{Longpet2.png}
+\caption{Median error vs evolution time for rejection filter phase estimation for the case where $M$ is continuous and $T=\sum_i M_i$.  The median error scales roughly as $4.7/T$, and the dashed lines in the inset figure give a $95\%$ confidence interval.}\label{fig:rms}
 \end{figure}
 
 The main issue that remains is how to optimally choose the parameters $\theta$
@@ -348,8 +348,8 @@ The constant $1.25$ is empirically chosen to minimize the cost of RFPE.
 \fig{PEerror} shows the error incurred using RFPE.  The most obvious feature is that the error shrinks exponentially with the number of experiments (which is proportional to the evolution time under the PGH) for $m>100$.  Roughly $150$ experiments are needed for the method to provide $32$ bits of accuracy in the median case.
 We discuss the scaling in the mean in \app{var-reduction}.
 
-The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than $O(\log(1/\epsilon)\log\log(1/\epsilon))$ in Kitaev's method~\cite{Kit96,kitaev2002classical}.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.
-This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.
+The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than $O(\log(1/\epsilon)\log\log(1/\epsilon))$ in Kitaev's method~\cite{Kit96,kitaev2002classical}.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.
+
 
 %Although the number of experiments needed is small, the experimental time need
 %not be.  If the error shrinks as $\epsilon\in \Theta(\ee^{-\lambda N})$ where
@@ -359,7 +359,7 @@ This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of mag
 
 
 
-\fig{ITPEcmp} compares RFPE to the information-theory PE (ITPE) method of Svore~\etal.  Although ITPE is inefficient and is non--adaptive, it is exact and so it is a natural benchmark to compare RFPE against.  We find  ITPE requires nearly five times the applications of $U$ if $\phi=2\pi k/t$ for integer $k<t$ and $t=10~000$.  
+\fig{ITPEcmp} compares RFPE to the information-theory PE (ITPE) method of Svore~\etal.  Although ITPE is inefficient and is non--adaptive, it is exact and so it is a natural benchmark to compare RFPE against.  We find  ITPE requires nearly five times the applications of $U$ if $\phi=2\pi k/t$ for integer $k<t$ and $t=10~000$.
 
 \begin{figure}[t!]
     \begin{centering}
@@ -394,8 +394,10 @@ tradeoff experimental and computational resources differently.  This is especial
 
 If we instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
 then we recover the  (or in the case where $M$ is continuous, the total evolution time required).
-In this case, we expect from the Heisenberg bound that the root-mean-square error should optimally scale as $1/M$.
-We see in~\fig{rms} that, over $50$ orders of magnitude in the desired error tolerance, this scaling is saturated for RFPE.
+In this case, we expect from the Heisenberg bound that the error should optimally scale as $1/T=1/\sum_i M_i$.
+\fig{rms} shows that, over $100$ orders of magnitude in the target error tolerance, this scaling is saturated for RFPE.  We further observe that the mean error, the
+root-mean square error and a $95\%$ confidence interval for the error follow an optimal $O(1/T)$ scaling.
+
 
 %\fig{rms} examines the performance of RFPE as a function of the total evolution number of applications of $U$ needed to achieve an error threshold.
 %The data conforms to the $O(1/T)$ scaling expected from the Heisenberg bound.  Further details are given in the appendix.
@@ -425,7 +427,7 @@ Since $T_2$ places a limitation on our ability to learn, we propose a variation 
 The experiments yielded by~\eq{pgh2} are qualitatively similar to locally optimized experiments for frequency estimation which are chosen to saturate the Cram\'er-Rao bound \cite{ferrie_how_2013}; however,~\eq{pgh2} requires nearly 100 fold less computing time to select an experiment.
 We choose $M$ to cut off at $T_2$ in part because the locally optimized solutions choose to saturate at this value which can be understood using the following argument.  The Cram\'er-Rao bound for frequency estimation scales as $O(M^{-2})$~\cite{WGC15} in the absence of decoherence.  Eqn.~\eq{likedecohere} suggests that decoherence causes the posterior variance to increase as $O(\exp(2M/T_2))$. { As in the frequency estimation case \cite{ferrie_how_2013},} calculus reveals that $M=T_2$ optimally trades off these tendencies, which justifies~\eq{pgh2}.
 
-\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Decoherence therefore does not necessarily impose a fundamental limitation on the accuracy that PE can achieve.  \fig{T2plot} also shows that confining the experiments to stay in a more coherent regime also can actually hurt the algorithm's ability to infer the phase, as expected.
+\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Decoherence therefore does not \emph{necessarily} impose a fundamental limitation on the accuracy that PE can achieve.
 
 
 
@@ -985,7 +987,7 @@ which is only true if $m\in \Omega(\alpha^2/\delta^2)$.
 \end{proof}
 We therefore see that the number of samples needed to track the small changes in a posterior distribution that happens when the likelihood function becomes extremely flat.  This condition is not sufficient because the actual components of the posterior mean may be shifted by a much smaller amount than the upper bounds used in the proof of~\thm{stability}.
 
-In contrast, exact Bayesian inference requires a number of bits that scales as $O(\log(1/\delta))$ (assuming a fixed and discrete number of hypotheses).  Thus exact Bayesian inference (or to a lesser extent particle filter methods) can be preferable in cases where the likelihood function is extremely flat.  Such concerns can be somewhat be either be avoided entirely or batches of such experiments should be combined to produce a likelihood function that is much less flat and choosing an appropriate instrumental distribution to ensure that the success probability remains high.
+In contrast, exact Bayesian inference requires a number of bits that scales as $O(\log(1/\delta))$ (assuming a fixed and discrete number of hypotheses).  Thus exact Bayesian inference (or to a lesser extent particle filter methods) can be preferable in cases where the likelihood function is extremely flat.  Such concerns can be somewhat  avoided  by combining batches of such experiments should to produce a likelihood function that is much less flat and choosing an appropriate instrumental distribution to ensure that the success probability remains high.
 
 %=============================================================================
 \section{Bayes Factors for Reset Rule}
