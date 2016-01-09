@@ -348,7 +348,7 @@ The constant $1.25$ is empirically chosen to minimize the cost of RFPE.
 \fig{PEerror} shows the error incurred using RFPE.  The most obvious feature is that the error shrinks exponentially with the number of experiments (which is proportional to the evolution time under the PGH) for $m>100$.  Roughly $150$ experiments are needed for the method to provide $32$ bits of accuracy in the median case.
 We discuss the scaling in the mean in \app{var-reduction}.
 
-The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than $O(\log(1/\epsilon)\log\log(1/\epsilon))$ in Kitaev's method~\cite{Kit96,kitaev2002classical}.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.
+The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.
 
 
 %Although the number of experiments needed is small, the experimental time need
