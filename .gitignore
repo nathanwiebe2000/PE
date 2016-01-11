@@ -1,0 +1,93 @@
+## Temporary files ##
+*~
+*.tmp
+
+## Visual Studio Stuff ##
+# Migration #
+Backup/*
+UpgradeLog.htm
+
+## IPython Checkpoints ##
+.ipynb_checkpoints
+
+## OS generated files ##
+.DS_Store*
+desktop.ini
+Thumbs.db
+
+## Build directories ##
+doc/_build
+
+## setup.py generated files ##
+MANIFEST
+
+# The following ignores are drawn from github@github:gitignore/Python.gitignore.
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+#Translations
+*.mo
+
+#Mr Developer
+.mr.developer.cfg
+
+
+## Sublime crap ##
+*.sublime-workspace
+
+# LaTeX Ignores #
+RFPE.pdf
+*Notes.bib
+*.alg
+*.aux
+*.toc
+*.ist
+*.acn
+*.acr
+*.glo
+*.idx
+*.log
+*.out
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
+*.auxlock
+*.synctex
