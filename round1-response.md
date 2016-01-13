@@ -1,0 +1,83 @@
+We thank the referee for their detailed and through feedback. We are glad that the referee agrees with the utility of our rejection filtering method to experimental practice, and in particular, to memory-limited and embedded computing platforms such as those based on FPGAs. We disagree, however, that the results presented in our manuscript overlap substantially with those already presented in literature. To this end, we have significantly clarified the presentation of our results to show how rejection filtering differs from traditional metrology applications, and offers something of value to quantum information processing. In particular, we have revised the introduction to emphasize the role of phase estimation in small quantum information processing devices, and to highlight the challenges in using such small devices to run algorithms of interest such as Shor's algorithm.
+
+Below, we detail the changes we have made to the manuscript and respond to each point raised by the referee. With these revisions, we believe that our work will offer something of value to the physics community at-large, and to the readers of *Physical Review Letters* in particular.
+
+> The authors present a new phase estimation algorithm based on Bayesian inference. Their work contributes both to the numerical implementation of Bayesian inference and, what has traditionally been in the focus of research, how the control parameters should be chosen in phase measurements.
+> 
+> One can distinguish three different components in the manuscript. First, the rules, i.e., the policy, through which to update the control parameters during the experiment. Second, a rejection filtering scheme that makes numerical implementation of Bayesian inference less memory intensive than the version of sequential Monte Carlo described, e.g., in [11]. A third component is a novel procedure to detect and correct faults in the estimation. Furthermore, the authors demonstrate the robustness of the algorithm in the presence of decoherence and in the presence of noise, even when the level of noise is unknown to the experimenter. It is also shown that the algorithm is suitable in estimating phase in real time when the phase may drift in time.
+> 
+> It is interesting that the rejection filtering scheme appears to also yield very accurate estimates since it can make Bayesian inference better compatible with memory-limited computing environments such as FPGAs. However, the algorithm to update measurement settings may have a limited impact on phase estimation over time since there exists relevant work on phase estimation beyond what is cited in the manuscript, and to a large degree similar results have been achieved earlier by other means. In my view the manuscript would therefore be better suited in Physical Review A.
+> 
+> I present detailed criticism, comments, and questions below.
+> 
+> 1) One of the main results of the manuscript is the policy for the presence of decoherence in Eq. (5). The achieved median error is plotted in Fig. 3. However, phase measurements in the presence of decoherence have also been studied, e.g., in R. S. Said, D. W. Berry, and J. Twamley, PRB B 83, 125410 (2011); P. Cappellaro, PRA 85, 030301 (2012) as well as in A. J. F. Hayes and D. W. Berry, PRA 89, 013838 (2014). The last paper also takes into account possible low visibility in the measurements which is not considered in the manuscript under review.
+
+The results of Ferrie *et al.* 2012 (doi:10/tfx) characterize the effects on phase estimation (there discussed as estimating Larmor precession) of known but limited visibility. RFPE inherits this, such that we have focused on the perfect-visibility case for clarity, and have done so without loss of generality. Moreover, the particle guess heuristic (PGH) that we employ in this work has been shown to work well for visibilities as low as 10% (Wiebe *et al.* 2014 doi:10/tdk), such that there is no reason to expect that visibility presents a difficulty for rejection-filtering PE. We have revised our manuscript accordingly, and have emphasized the citation to Ferrie *et al.* 2012, as well as noted the independent result of Cappellaro 2012.
+
+> With perfect visibility, the likelihood function of Eq. (6) in PRA 89, 013838 is equivalent to Eq. (5) of the manuscript. Comparing the results is not straightforward since PRA 89, 013838 considers mean squared error whereas the current manuscript presents median error and because of the differences in counting the resources.
+
+We find it curious that the referee selected Equation (6) from Hayes and Berry 2014 as the quintessential example of the phase estimation likelihood function; nonetheless, we agree that the phase estimation likelihood function is well-motivated and well-studied, both by us and more broadly in literature. 
+Our result extends this body of work to consider phase estimation using an approximation of Bayesian inference that is easy to implement in memory-constrained experimental control platforms and that uses few measurements to accurately estimate the phase-estimation model.
+
+As discussed in the revisions to our introduction, this difference in resource counting stems from a difference in application; whereas Hayes and Berry 2014 consider cost models best-suited to metrology applications, we have evaluated RFPE in terms of cost models motivated by applications to quantum algorithms.
+
+> But in principle one could either (i) combine the policy of Eq. (5) with the error correction procedure of p. 4 and evaluate the mean error or (ii) simply apply the policy of PRA 89, 013838 with perfect visibility and calculate the median error. Either way, it seems unlikely the new policy could significantly improve the old results. The green curve in the upper panel of Fig. 5 in PRA 89, 013838 already exhibits a Heisenberg-like scaling $V_H \sim N^{−2}$ (notation of that paper). At least, the authors have not quantified how much they could improve the precision of the estimates compared to existing results in the presence of decoherence, and in this case the burden of proof is on the authors.
+> One of the merits of policy of Eq. (5) is that the updates of the measurement settings are faster to evaluate than with locally optimized settings. But the measurement settings of PRA 89, 013838 are also fast to evaluate once the policy is known. It is only finding an efficient policy where substantial computation time is required. 
+
+In principle, one could indeed apply the policy of Hayes and Berry with perfect visibility, as suggested. This is neither necessary (our policy handles limited visibility well, as noted above), and does not solve the problem under study, however. Thus, we have refrained from doing so. In particular, by using the particle guess heuristic (PGH), we have avoided both an expensive precomputation, and the need to store large policy vectors on experimental control hardware. Moreover, because the PGH depends only on the current state of the algorithm, we do not need to know *a priori* how many samples we wish to collect, but can make this decision adaptively as well.
+For instance, in our new Figure 3, we illustrate this by running our algorithm for $N = TODO$ experimental samples, beyond what is generally considered to be feasible with precomputed policies.
+
+We have revised our manuscript to illustrate the advantages of our PGH heuristic (as adapted to RFPE) with respect to the precomputed decision trees of Hayes and Berry.
+
+> 2)  In the absence of decoherence the authors propose the policy of Eq. (4). In Figs. 1 and 2 median error is compared to Kitaev’s work from the year 1996 and to information-theory phase estimation (ITPE). For ITPE reference is not given and its working has not been fully explained. But more importantly, there already exists methods to achieve Heisenberg scaling for the mean squared error. A review can be found in Berry et al., PRA 80, 052114 (2009) where this is shown in Fig. 2. More recent work were policies where found through machine learning is published in A. Hentschel and B. C. Sanders, PRL 104, 063603 (2010) as well as in A. Hentschel and B. C. Sanders, PRL 107, 233601 (2011). This also yields policies that are fast to execute. These results are only applicable with $N$ up to ~50 (notation of those papers), though.
+
+As above, our result is significant not in that it approximately reaches the Cramér-Rao bound (more commonly known in physics as Heisenberg scaling), but that it does so without requiring large policy vectors such as those explored by the algorithm of Hentschel and Sanders 2010. Indeed, the difficulty of precomputation and the size of the resulting policies explain much of the $N \approx 50$ limit encountered by the works mentioned by the referee--- again referring to our new Figure 1, RFPE suffers no such immediate limitation.
+
+> 3) On page 4, the step 3 of the reset rule states “After restart, continue as normal until σ ≤ ∆ then set σ and µ to those of the closest eigenvalue”. I did not understand this. If “eigenvalue” means the eigenvalue of U, it should be unknown. The definition of ∆ is that “spectral gaps are promised to be at least ∆”. But if spectral gaps are differences between (energy) eigenvalues and eigenvalues are unknown, ∆ is also unknown. Also, it was not clear to me what lines in Algorithm 3 (Supplemental Material) would correspond to the step 3. In algorithm 3, ∆ is not mentioned. Also, the text could present a motivation for why the number 5 is chosen in the condition CNT < 5.
+
+TODO
+
+> 4)  Page 1 of the main text states “Bayesian phase estimation, as introduced by Svore et al. [9], involves performing a set of experiments and then updating the prior distribution using Bayes’ rule.” But already much earlier papers involve performing a set of experiments and then updating the prior using Bayes’ rule. For instance D.W. Berry and H. M. Wiseman, PRL 85, 5098 (2000) and D. W. Berry, H. M. Wiseman, and J. K. Breslin, PRA 63, 053804 (2001). Many other papers also do this. A review from the year 2009 can be found in PRA 80, 052114. The authors must mean something more specific but it was not clear to me what do they mean.
+
+We have added the suggested citations.
+
+> 5) On page 1 of Supplemental Material it is stated that “We see in Figure 2 that this strategy of restarting substantially reduces the weights of the tails. In fact, the mean error in the inference falls from 0.0513 radians to $1.08×10^{-6}$ radians. This shows that this resetting strategy substantially reduce the probability of a large error occuring in the estimate of the eigenphase. To our knowledge, this data represents the first time that a heuristic method has been successful in reducing the mean error in frequency estimation to an acceptable level of uncertainty.” However, in M. P. V. Stenberg, Y. R. Sanders, and F. K. Wilhelm, PRL 113, 210404 (2014) the mean error of a heuristic method is reduced through an “outlier correction scheme”. Figure 4 exhibits the results for g that is equivalent to frequency when ωr is known (notation of that paper). Also in M. P. V. Stenberg, K. Pack, and F. K. Wilhelm, arXiv:1508.04412 it is shown how to reduce the mean error of the coherent state phase and amplitude through a similar outlier correction scheme.
+
+We agree that other heuristics have been used to reduce mean errors in frequency estimation, and have changed the wording here to reflect that agreement. We disagree, however, that the results of Stenberg *et al.* 2014 and 2015 are similar heuristics. In particular, in Appendix D, we show that our reset rule can be derived from an external agent's first-principles reasoning about the state of a rejection filtering instance.
+
+> 6) In Supplemental Material, Fig. 3 demonstrates robustness against uncharacterised noise. Robustness against uncharacterised noise was also demonstrated in PRL 113, 210404 (2014) in Fig. 3.
+
+We acknowledge that the effect of $\gamma$ in this figure is similar to that studied by Stenberg *et al.* in PRL 113, 210404. As Stenberg *et al.* note in their introduction, however, robustness to uncharacterized sources of error is also a feature of our earlier works Ferrie and Granade 2014 (doi:10/tdj) and Wiebe *et al.* 2014 (doi:10/tdk) using the sequential Monte Carlo algorithm.
+In particular, Ferrie and Granade considered errors in evaluating the likelihood function, Wiebe *et al.* show robustness to model errors, and Stenberg *et al.* show robustness to readout error and decoherence.
+
+The role of Supplemental Figure 3 in our original manuscript was thus to indicate that in replacing sequential Monte Carlo by rejection filtering, the desirable feature of robustness to readout errors has not been lost. We have emphasized this in our revisions, and have added a citations to these earlier works.
+
+> 7) The circuit on page 1 could have a figure number and a caption. It could be stated explicitly that H is the Hadamard operator and Z a Pauli matrix. The formula $Z(Mθ) = e^{iM\theta Z}$ has been given but it has not been explained what Z is on the right-hand side of the equality.
+
+TODO
+
+> 8)  Page 4 states “This model is appropriate when the time required to implement the controlled operation Λ(U) is long...” But the operation Λ has not been deﬁned. Is Λ(U) the same as $U^M$ on page 1?
+
+Though $\Lambda(U)$ is somewhat commonly used to denote the controlled application of $U$, we have revised our manuscript to be more explicit.
+ 
+> 9) On page 4 it is stated “In fact, it has already been observed that Bayesian inference to can be used to learn to an arbitrary number of digits using M ≈ T2 for certain noise models [11] (at the price of degrading the algorithm’s performance).” As far as I can see, in [11] it was not observed how to find the frequency beyond what is plotted in the figures. Numerical issues (impoverishment etc.) might complicate the attempts to learn an arbitrary number of digits. Of course there is probably a workaround to overcome such issues but I do not think it was shown in [11] how to do it.
+
+We agree that this language was unclear, and have removed it in revisions.
+
+> 10) Page 2 states “The factor of 1.25 comes from optimizing the cost of RFPE.” How did the authors confirm the factor of 1.25 optimizes the cost of RFPE?
+
+We did not intend to imply that 1.25 is optimal, and have changed the language in revisions to indicate that the value of 1.25 is one that works well for the experiments under consideration.
+
+> 11) In Fig. 3 the curves continue up to the experiment number 10^3 but the axes extend to 10^4.
+> 
+> 12) In Supplemental Material, in Eq. (4) $j$ is used both as a subindex for the free variable $x_j$ on the left-hand side of the equality as well as as the dummy index in the sums on the right-hand side. It would be better to use different indices. 
+
+We have made the suggested revision.
+
+> 13) In Supplemental Material, Eq. (9) uses the concept of “prior correct” whereas in Eq. (10) it reads “prior right”. The same terminology could be used in both equations.
+
+We have made the suggested revision.
+
+> 14) In my opinion the authors would better put their work in context if they would add citations at least to the papers mentioned above.
+
+We have added the majority of the suggested citations, as well as a few additional citations. As a result, we believe that our work is more correctly established in its context.
