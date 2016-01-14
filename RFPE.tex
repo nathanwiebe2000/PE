@@ -175,19 +175,18 @@ Eigenvalue estimation has been a cornerstone of physics since the dawn of spectr
 
 The need for efficient PE algorithms is especially poignant for Shor's algorithm~\cite{shor_polynomial-time_1995}, wherein the unknown eigenphases must be estimated to hundreds of bits of precision.  In order
 for the algorithm to be practical for this application, the PE algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
-This excludes many existing iterative PE methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
+This excludes many existing iterative PE (IPE) methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
 
-Here we address this gap by proposing a new approach to iterative phase estimation that is based on a new inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
+Here we address this gap by proposing a new approach to IPE that is based on a new inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 is robust to experimental imperfections such as depolarizing noise  and
 small systematic errors, reports the uncertainty in the estimate of the phase, can track time-dependent phases and can be employed in a memory limited environment like in an FPGA.
 
-Before going into detail about our algorithm we will first review the iterative phase
-estimation circuit and Bayesian approaches to PE.  We then show that rejection
+Before going into detail about our algorithm we will first review the IPE circuit and Bayesian approaches to PE.  We then show that rejection
 sampling can be used to efficiently approximate Bayesian inference, thereby
 allowing PE to inherit the speed and robustness of Bayesian approaches while
 retaining the efficiency of traditional methods.
 
-Iterative PE infers the eigenvalue of a given eigenvector of a unitary matrix
+IPE infers the eigenvalue of a given eigenvector of a unitary matrix
 $U$ from a set of experiments that are performed on the circuit
 \begin{equation*}
     \Qcircuit @C=1em @R=1em {
@@ -356,16 +355,16 @@ required~\cite{wiebe_hamiltonian_2014},
     M &= \left\lceil\frac{1.25}{\sigma}\right\rceil,~
     \theta \sim P(\phi).\label{eq:PGH}
 \end{align}
-The constant $1.25$ was chosen because it works well empirically.
+The constant $1.25$ is chosen because it works well empirically.
 
 
 
 \fig{PEerror} shows the error incurred using RFPE.  The most obvious feature is that the error shrinks exponentially with the number of experiments (which is proportional to the evolution time under the PGH) for $m>100$.  Roughly $150$ experiments are needed for the method to provide $32$ bits of accuracy in the median case.
 We discuss the scaling in the mean in \app{var-reduction}.
 
-The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  
-This suggests that RFPE may offer substantial advantages for applying Shor's algorithm in qubit limitted devices.
-Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix. This  $O(\log(1/\epsilon))$ scaling is optimal, as seen from a simple counting argument.
+The number of experiments needed by RFPE scales as $O(\log(1/\epsilon))$, where $\epsilon$ is the target uncertainty, rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  
+ RFPE should therefore offer advantages for implementing Shor's algorithm in small quantum devices.
+Concretely, after $150$ experiments the median error for Kitaev's algorithm (with $s=10$) is roughly $10^7$ times that of RFPE.  $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix and is optimal (as seen from a simple counting argument).
 
 
 %Although the number of experiments needed is small, the experimental time need
@@ -444,7 +443,7 @@ Since $T_2$ places a limitation on our ability to learn, we propose a variation 
 The experiments yielded by~\eq{pgh2} resemble locally optimized experiments for frequency estimation, which saturate the Cram\'er-Rao bound \cite{ferrie_how_2013}; however,~\eq{pgh2} requires nearly 100 fold less computing time to select an experiment.
 The choice to cut off $M$ at $T_2$ can be understood using the following argument.  The Cram\'er-Rao bound for frequency estimation scales as $O(M^{-2})$~\cite{WGC15} in the absence of decoherence.  Eqn.~\eq{likedecohere} suggests that decoherence causes the posterior variance to increase as $O(\exp(2M/T_2))$. { Calculus reveals that $M=T_2$ optimally trades off these tendencies~\cite{ferrie_how_2013}, which justifies~\eq{pgh2}.
 
-\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Depolarizing noise, or diminished visibility~\cite{hayes_swarm_2014}, therefore does not \emph{necessarily} impose a fundamental limitation on the accuracy that PE can achieve.
+\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Depolarizing noise, or diminished visibility~\cite{hayes_swarm_2014}, therefore does not \emph{necessarily} limit the accuracy that PE can achieve.
 
 
 
@@ -476,12 +475,21 @@ The test process also permits the eigenvalue of an eigenstate in a decohering sy
 \section{Conclusion}
 %=============================================================================
 
-Our work makes phase estimation more
-experimentally relevant by substantially reducing the
-experimental time required and also by making the process resilient
-to decoherence. This is especially critical as current experiments push past the classical
+
+%Our work makes phase estimation more
+%experimentally relevant by substantially reducing the
+%experimental time required and also by making the process resilient
+%to decoherence. 
+Our efficient methods for Bayesian phase estimation represent an important step forward for IPE.  They provide
+a new platform upon which online inferences can be performed that scale optimally over
+thousands of experiments and can therefore be used to make tracking time--dependent properties of the system
+practical.  
+
+We also observe that our methods inherit the robustness to experimental imperfections that
+Bayesian approaches enjoy.
+This is especially critical as current experiments push past the classical
 regime and IPE becomes increasingly impractical in lieu of fault-tolerance.
-In particular, the ability of our algorithm to learn in the presence of decoherence provides an efficient alternative to the
+In particular, the ability of our algorithms to learn in the presence of decoherence provides an efficient alternative to the
 variational eigensolvers used in present day experiments~\cite{PMS+14,MBL+14,WHT15}.  
 
 Looking at the problem of phase estimation more generally, it is clear that approximate Bayesian inference
