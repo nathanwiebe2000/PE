@@ -361,7 +361,7 @@ The constant $1.25$ is empirically chosen to minimize the cost of RFPE.
 \fig{PEerror} shows the error incurred using RFPE.  The most obvious feature is that the error shrinks exponentially with the number of experiments (which is proportional to the evolution time under the PGH) for $m>100$.  Roughly $150$ experiments are needed for the method to provide $32$ bits of accuracy in the median case.
 We discuss the scaling in the mean in \app{var-reduction}.
 
-The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.
+The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  
 
 
 %Although the number of experiments needed is small, the experimental time need
@@ -391,7 +391,7 @@ fails to learn in the median because the long evolution times chosen lead to
 contradictory possibilities that prevents ITPE from converging to a unique answer.  We correct
 this by choosing $M\rightarrow \lceil M/2\rceil$ in such cases, which increases the number
 of experiments to $35$ but also reduces the experimental time below that of
-unmodified ITPE.  This shows that all three methods
+unmodified ITPE.  All three methods therefore
 tradeoff experimental and computational resources differently.  This is especially salient because ITPE is inefficient unlike RFPE.
 
 \begin{figure*}
@@ -512,7 +512,7 @@ The central idea behind our restarting strategy is to examine the decay of $\sig
 
 When a restarting strategy like this is employed, we need to modify the model selection criteria.  Previously, we used the value of $\mu$ yielded by the most recent experiment as our estimate.   Given that a restart late in the algorithm can reset all information learned about a model, it makes sense in this context to use the value of $\mu$ corresponding to the smallest $\sigma$ observed.  This corresponds to the model that the inference algorithm has the greatest certainty.
 
-We see in~\fig{restart} that this strategy of restarting substantially reduces the weights of the tails.  In fact, the mean error in the inference falls from $0.0513$ radians to $1.08\times 10^{-6}$ radians.  This shows that this resetting strategy substantially reduce the probability of a large error occuring in the estimate of the eigenphase.  This shows that heuristic error correction methods can be effective at reducing the mean error.  Previous approaches that succeeded in making the mean--error small used costly numerically optimized experiments, which render such approaches impractical for online phase estimation~\cite{granade_robust_2012,ferrie_how_2013, wiebe_hamiltonian_2014,wiebe_quantum_2014-1,WGC15}.
+We see in~\fig{restart} that this strategy of restarting substantially reduces the weights of the tails.  In fact, the mean error in the inference falls from $0.0513$ radians to $1.08\times 10^{-6}$ radians.  This shows that this resetting strategy substantially reduce the probability of a large error occuring in the estimate of the eigenphase.  Heuristic error correction methods can therefore be effective at reducing the mean error.  Previous approaches that succeeded in making the mean--error small used costly numerically optimized experiments, which render such approaches impractical for online phase estimation~\cite{granade_robust_2012,ferrie_how_2013, wiebe_hamiltonian_2014,wiebe_quantum_2014-1,WGC15}.
 
 Note that Kitaev's phase estimation algorithm also can have a high probability of failure throughout the algorithm, so one might wonder if these restarting strategies might also be of value for traditional phase estimation algoirthms.  Unfortunately, these strategies cannot be easily translated to Kitaev's PE algorithm because the most expensive experiments are performed first.  Thus, restarting does not allow the algorithm to combat decoherence, nor can it be used to inexpensively fix situations where one of the bits is inferred improperly.
 
