@@ -171,23 +171,22 @@ Proof of~#1.}}
 \label{sec:intro}
 %=============================================================================
 
-Eigenvalue estimation has been a cornerstone of physics since the dawn of spectroscopy.  In recent years, ideas from quantum information have revolutionized the ways that we estimate these values by providing methods that require exponentially fewer experiments than statistical sampling and total experimental time that saturates the Heisenberg limit, which is the best possible scaling allowed by quantum mechanics.  This quantum approach, known as phase estimation (PE), is crucial to acheive many of the celebrated speedups promised by quantum computing~\cite{shor_polynomial-time_1995,BHM+02,ADL+05,harrow2009quantum,lanyon2010towards}.
+Eigenvalue estimation has been a cornerstone of physics since the dawn of spectroscopy.  In recent years, ideas from quantum information have revolutionized the ways that we estimate these values by providing methods that require exponentially fewer experiments than statistical sampling and total experimental time that saturates the Heisenberg limit~\cite{berry_optimal_2000,higgins2007entanglement,hentschel_machine_2010}, which is the best possible scaling allowed by quantum mechanics.  This quantum approach, known as phase estimation (PE), is crucial to acheive many of the celebrated speedups promised by quantum computing~\cite{shor_polynomial-time_1995,BHM+02,ADL+05,harrow2009quantum,lanyon2010towards}.
 
 The need for efficient PE algorithms is especially poignant for Shor's algorithm~\cite{shor_polynomial-time_1995}, wherein the unknown eigenphases must be estimated to hundreds of bits of precision.  In order
-for the algorithm to be practical, the PE algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
-This excludes many existing PE methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren.
+for the algorithm to be practical for this application, the PE algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
+This excludes many existing iterative PE (IPE) methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
 
-Here we address this gap by proposing a new approach to iterative phase estimation that is based on a new approximate inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
+Here we address this gap by proposing a new approach to IPE that is based on a new inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 is robust to experimental imperfections such as depolarizing noise  and
 small systematic errors, reports the uncertainty in the estimate of the phase, can track time-dependent phases and can be employed in a memory limited environment like in an FPGA.
 
-Before going into detail about our algorithm we will first review the phase
-estimation circuit and Bayesian approaches to PE.  We then show that rejection
+Before going into detail about our algorithm we will first review the IPE circuit and Bayesian approaches to PE.  We then show that rejection
 sampling can be used to efficiently approximate Bayesian inference, thereby
 allowing PE to inherit the speed and robustness of Bayesian approaches while
 retaining the efficiency of traditional methods.
 
-Iterative PE infers the eigenvalue of a given eigenvector of a unitary matrix
+IPE infers the eigenvalue of a given eigenvector of a unitary matrix
 $U$ from a set of experiments that are performed on the circuit
 \begin{equation*}
     \Qcircuit @C=1em @R=1em {
@@ -200,8 +199,8 @@ $M\in\mathbb{N}$ specifies how many applications of $U$ are applied,
 and where $Z(M \theta) = \ee^{\ii M \theta Z}$ is a rotation that can be used to compare the eigenphase of $U$ to
 a known reference value.  Here $Z$ is the Pauli--$Z$ operator and $H$ is the Hadamard gate.
 Most PE algorithms use this circuit to infer the bits
-in a binary expansion of $\phi$.  The process is can be made near optimal (up to $\log^*$ factors~\cite{SHF14}) and
-affords an efficient inference method for these bits.
+in a binary expansion of $\phi$.  The process can be made optimal (up to $\log^*$ factors~\cite{SHF14}) and
+also classically efficient.
 
 
 
@@ -247,8 +246,10 @@ distribution over the phase. The mean and standard deviation of this
 distribution provide an estimate of the true eigenvalue and the algorithm's
 uncertainty in that value. More sophisticated estimates of uncertainty, such
 as credible regions, can also be extracted from the posterior
-distribution~\cite{granade_robust_2012,ferrie_high_2014}.  Uncertainty estimates are crucial for the experiment design phase of  RFPE
- and also because they allow the protocol to be terminated when a threshold accuracy has been reached.
+distribution~\cite{granade_robust_2012,ferrie_high_2014}.  
+
+%These uncertainty estimates are crucial for the experiment design phase of  RFPE
+% and also because they allow the protocol to be terminated when a threshold accuracy has been reached.
 
 \begin{figure}[t!]
     \begin{centering}
@@ -341,10 +342,10 @@ at a rate of tens of megahertz or faster.
 This can be avoided using precomputed
 measurement settings
 \cite{sergeevich_characterization_2011}
-or \emph{policies} \cite{hentschel_machine_2010,hayes_swarm_2014}. These approaches,
+or \emph{policies} \cite{hentschel_machine_2010,hayes_swarm_2014}, which
+can substnatially reduce the computational time needed to perform an online inference. These approaches,
 however, \emph{a priori} limit the number of measurements to
-be performed, and can require significant amounts of memory
-to store on the experimental control platform.
+be performed, and can require significant amounts of memory to store the policy.
 
 Fortunately, the particle guess heuristic (PGH) can give
 expedient and
@@ -355,14 +356,16 @@ required~\cite{wiebe_hamiltonian_2014},
     M &= \left\lceil\frac{1.25}{\sigma}\right\rceil,~
     \theta \sim P(\phi).\label{eq:PGH}
 \end{align}
-The constant $1.25$ is empirically chosen to reduce the cost of RFPE.
+The constant $1.25$ is chosen as it works well empirically.
 
 
 
 \fig{PEerror} shows the error incurred using RFPE.  The most obvious feature is that the error shrinks exponentially with the number of experiments (which is proportional to the evolution time under the PGH) for $m>100$.  Roughly $150$ experiments are needed for the method to provide $32$ bits of accuracy in the median case.
 We discuss the scaling in the mean in \app{var-reduction}.
 
-The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\epsilon))$ rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  Concretely, after $150$ experiments the median error for Kitaev's PE algorithm (with $s=10$) is roughly $10$ million times that of RFPE.  This $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix.  
+The number of experiments needed by RFPE scales as $O(\log(1/\epsilon))$, where $\epsilon$ is the target uncertainty, rather than the $O(\log(1/\epsilon)\log\log(1/\epsilon))$ scaling of Kitaev's method~\cite{Kit96,kitaev2002classical}.  
+ RFPE should therefore offer advantages for implementing Shor's algorithm in small quantum devices.
+Concretely, after $150$ experiments the median error for Kitaev's algorithm (with $s=10$) is roughly $10^7$ times that of RFPE.  $O(\log(1/\epsilon))$ scaling  is further observed over $100$ orders of magnitude in $\epsilon$ in the appendix and is optimal (as seen from a simple counting argument).
 
 
 %Although the number of experiments needed is small, the experimental time need
@@ -373,7 +376,7 @@ The number of experiments needed to reach error $\epsilon$ scales as $O(\log(1/\
 
 
 
-\fig{ITPEcmp} compares RFPE to the information-theory PE (ITPE) method of Svore~\etal.  Although ITPE is inefficient and is non--adaptive, it is exact and so it is a natural benchmark to compare RFPE against.  We find  ITPE requires nearly five times the applications of $U$ if $\phi=2\pi k/t$ for integer $k<t$ and $t=10~000$.
+\fig{ITPEcmp} compares RFPE to the information-theory PE (ITPE) method of Svore~\etal~\cite{SHF14}.  Although ITPE is inefficient and is non--adaptive, it is exact and so it is a natural benchmark to compare RFPE against.  We find  ITPE requires nearly five times the applications of $U$ if $\phi=2\pi k/t$ for integer $k<t$ and $t=10~000$.
 
 \begin{figure}[t!]
     \begin{centering}
@@ -406,11 +409,11 @@ tradeoff experimental and computational resources differently.  This is especial
     }
 \end{figure*}
 
-We can instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
-(or in the case where $M$ is continuous, the total evolution time required).
-In this case, we expect from the Heisenberg bound that the error should optimally scale as $1/T=1/\sum_i M_i$.
-\fig{rms} shows that, over $100$ orders of magnitude in the target error tolerance, this scaling is saturated for RFPE.  We further observe that the mean error, the
+In contrast to Shor's algorithm, in metrological and simulation applications the scaling of the error with the total number of applications of $U$ needed  (or in the case where $M$ is continuous, the total evolution time) is the most significant metric.
+The Heisenberg bound states that the error optimally scales as $1/T=1/\sum_i M_i$ here.
+\fig{rms} shows that this scaling is saturated for RFPE.  We further observe that the mean error, the
 root-mean square error and a $95\%$ confidence interval for the error follow an optimal $O(1/T)$ scaling.
+RFPE therefore saturates optimal scaling in this setting as well.
 
 
 %\fig{rms} examines the performance of RFPE as a function of the total evolution number of applications of $U$ needed to achieve an error threshold.
@@ -420,7 +423,7 @@ root-mean square error and a $95\%$ confidence interval for the error follow an 
 \subsection{Phase estimation with depolarizing noise}
 A criticism that has been levied lately at PE methods is that they can be impractical to execute on non--fault tolerant quantum hardware~\cite{PMS+14,MBL+14,WHT15}.  This is because phase estimation attains its quadratic advantage over statistical sampling by using exponentially long evolutions.  Decoherence causes the resultant phases to become randomized as time progresses, ultimately resulting in
 $\lim_{M\rightarrow \infty} P(0|\phi;\theta,M) = \frac{1}{2}$.
-Measurements convey no information in this limit.  It similarly may be tempting to think that decoherence fundamentally places a lower limit on the accuracy of PE.   Bayesian inference to can, however, estimate $\phi$ using experiments with $M \approx T_2$~\cite{granade_robust_2012}.  
+Measurements convey no information in this limit.  It similarly may be tempting to think that decoherence fundamentally places a lower limit on the accuracy of PE.   Bayesian inference to can, however, estimate $\phi$ using experiments with $M \approx T_2$~\cite{granade_robust_2012} for some noise models.  
 
 We model the effect of decoherence on the system by assuming the existence of a \emph{decoherence time} $T_2$ such that
 \begin{gather}
@@ -430,7 +433,7 @@ We model the effect of decoherence on the system by assuming the existence of a 
         P(1|\phi) & = \ee^{-M/T_2}\left(\frac{1-\cos(M[\phi -\theta])}{2}\right)+\frac{1-\ee^{-M/T_2}}{2}.
     \end{aligned}
 \end{gather}
-This model is appropriate when the time required to implement the controlled application of $U$ is long relative the that required to perform $H$ and an arbitrary $Z$--rotation, as is appropriate in quantum simulation.  For simplicity, in the following we assume that $T_2$ is known. 
+This model is appropriate when the time required to implement the controlled application of $U$ is long relative the that required to perform $H$ and an arbitrary $Z$--rotation, as is appropriate in quantum simulation.  %We assume in the following that $T_2$ is known. 
  
 
 Since $T_2$ places a limitation on our ability to learn, we propose a variation to \eq{PGH},
@@ -438,10 +441,10 @@ Since $T_2$ places a limitation on our ability to learn, we propose a variation 
     \label{eq:pgh2}
     M = \min\left\{\left\lceil\frac{1.25}{\sigma}\right\rceil, T_2 \right\}.
 \end{equation}
-The experiments yielded by~\eq{pgh2} are qualitatively similar to locally optimized experiments for frequency estimation which are chosen to saturate the Cram\'er-Rao bound \cite{ferrie_how_2013}; however,~\eq{pgh2} requires nearly 100 fold less computing time to select an experiment.
-We choose $M$ to cut off at $T_2$ in part because the locally optimized solutions choose to saturate at this value which can be understood using the following argument.  The Cram\'er-Rao bound for frequency estimation scales as $O(M^{-2})$~\cite{WGC15} in the absence of decoherence.  Eqn.~\eq{likedecohere} suggests that decoherence causes the posterior variance to increase as $O(\exp(2M/T_2))$. { As in the frequency estimation case \cite{ferrie_how_2013},} calculus reveals that $M=T_2$ optimally trades off these tendencies, which justifies~\eq{pgh2}.
+The experiments yielded by~\eq{pgh2} resemble locally optimized experiments for frequency estimation, which saturate the Cram\'er-Rao bound \cite{ferrie_how_2013}; however,~\eq{pgh2} requires nearly 100 fold less computing time to select an experiment.
+The choice to cut off $M$ at $T_2$ can be understood using the following argument.  The Cram\'er-Rao bound for frequency estimation scales as $O(M^{-2})$~\cite{WGC15} in the absence of decoherence.  Eqn.~\eq{likedecohere} suggests that decoherence causes the posterior variance to increase as $O(\exp(2M/T_2))$. { Calculus reveals that $M=T_2$ optimally trades off these tendencies~\cite{ferrie_how_2013}, which justifies~\eq{pgh2}.
 
-\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Decoherence therefore does not \emph{necessarily} impose a fundamental limitation on the accuracy that PE can achieve.
+\fig{T2plot} shows that RFPE smoothly transitions between the exponential scaling expected at short times and the polynomial scaling expected when decoherence becomes significant.  The error scales roughly as $1/N^{0.6}$ in this polynomial regime, which is comparable to the $1/\sqrt{N}$ scaling expected from statistical sampling.  Depolarizing noise, or diminished visibility~\cite{hayes_swarm_2014}, therefore does not \emph{necessarily} limit the accuracy that PE can achieve.
 
 
 
@@ -449,7 +452,7 @@ We choose $M$ to cut off at $T_2$ in part because the locally optimized solution
 \section{Tracking Eigenphases}
 %=============================================================================
 
-\fig{T2plot} shows the performance of RFPE when the initial quantum state is an eigenstate and is discarded after each experiment.  Performing phase estimation in this way minimizes the number of experiments, but can be prohibitively expensive if preparation of the initial eigenstate is prohibitively costly.  In such cases, it makes sense to follow the standard prescription for phase estimation by keeping the quantum state until it is clear that the initial eigenstate has been depolarized.  These depolarizations can cause RFPE to become confused because the new data that comes in is only consistent with hypotheses that have been ruled out.  We address this by performing inexpensive experiments to assess whether the state has depolarized and then restart the learning process. Restarting can even be valuable when $T_2=0$ if the input state is a superposition of eigenvectors or to recover if the RFPE becomes stuck (see \app{var-reduction}).
+\fig{T2plot} shows the performance of RFPE when the initial quantum state is an eigenstate and is discarded after each experiment.  Performing phase estimation in this way minimizes the number of experiments, but can be prohibitively expensive if preparation of the initial eigenstate is prohibitively costly.  In such cases, it makes sense to follow the standard prescription for phase estimation by keeping the quantum state until it is clear that the initial eigenstate has been depolarized.  These depolarizations can cause RFPE to become confused because the new data that comes in is only consistent with hypotheses that have been ruled out.  We address this by performing inexpensive experiments to assess whether the state has depolarized and then restart the learning process. Restarting can even be valuable when $T_2=0$ to recover if the RFPE becomes stuck (see \app{var-reduction}).
 
 The following procedure addresses this issue% in cases where the spectral gaps are promised to be at least $\Delta$.
 \begin{enumerate}
@@ -463,7 +466,7 @@ If the prior probability distribution is correct then the probability of measuri
 \begin{equation}
     \frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty \cos^2\left(\frac{(\mu-x)\tau}{2\sigma}\right)\ee^{-\frac{(\mu-x)^2}{2\sigma^2}} \mathrm{d}x = \frac{1+\ee^{-\tau^2/2}}{2}.
 \end{equation}
-If $\tau=0.1$, the probability of measuring $0$ is approximately $0.998$ and hence measuring $1$ implies that the hypothesis that the prior is correct can be rejected at $p \le 0.002$. A Bayesian analysis of our reset rule
+If $\tau=0.1$ then the probability of measuring $0$ is approximately $0.998$ and hence measuring $1$ implies that the hypothesis that the prior is correct can be rejected at $p \le 0.002$. A Bayesian analysis of our reset rule
 is given in \app{bf}.
 
 
@@ -473,12 +476,21 @@ The test process also permits the eigenvalue of an eigenstate in a decohering sy
 \section{Conclusion}
 %=============================================================================
 
-Our work makes phase estimation more
-experimentally relevant by substantially reducing the
-experimental time required and also by making the process resilient
-to decoherence. This is especially critical as current experiments push past the classical
+
+%Our work makes phase estimation more
+%experimentally relevant by substantially reducing the
+%experimental time required and also by making the process resilient
+%to decoherence. 
+Our efficient methods for Bayesian phase estimation represent an important step forward for IPE.  They provide
+a new platform upon which online inferences can be performed that scale optimally over
+thousands of experiments and can therefore be used to make tracking time--dependent properties of the system
+practical.  
+
+We also observe that our methods inherit the robustness to experimental imperfections that
+Bayesian approaches enjoy.
+This is especially critical as current experiments push past the classical
 regime and IPE becomes increasingly impractical in lieu of fault-tolerance.
-In particular, the ability of our algorithm to learn in the presence of decoherence provides an efficient alternative to the
+In particular, the ability of our algorithms to learn in the presence of decoherence provides an efficient alternative to the
 variational eigensolvers used in present day experiments~\cite{PMS+14,MBL+14,WHT15}.  
 
 Looking at the problem of phase estimation more generally, it is clear that approximate Bayesian inference
