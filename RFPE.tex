@@ -195,7 +195,8 @@ $U$ from a set of experiments that are performed on the circuit
         \lstick{\ket{\phi}} & {/} \qw   & \qw                   & \gate{U^M} & \qw      & \qw    & \qw
     }
 \end{equation*}
-where $U\ket{\phi} = \ee^{\ii\phi}\ket{\phi}$ for an unknown eigenphase $\phi \in \mathbb{R}$,
+where $H$ is the Hadamard gate, $U\ket{\phi} = \ee^{\ii\phi}\ket{\phi}$ for an unknown eigenphase $\phi \in \mathbb{R}$,
+$M\in\mathbb{N}$ specifies how many applications of $U$ are applied,
 and where $Z(M \theta) = \ee^{\ii M \theta Z}$ is a rotation that can be used to compare the eigenphase of $U$ to
 a known reference value.  Here $Z$ is the Pauli--$Z$ operator and $H$ is the Hadamard gate.
 Most PE algorithms use this circuit to infer the bits

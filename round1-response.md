@@ -74,11 +74,11 @@ In particular, Ferrie and Granade considered errors in evaluating the likelihood
 
 The role of Supplemental Figure 3 in our original manuscript was thus to indicate that in replacing sequential Monte Carlo by rejection filtering, the desirable feature of robustness to readout errors has not been lost. We have emphasized this in our revisions, and have added citations to these earlier works.
 
-> 7) The circuit on page 1 could have a figure number and a caption. It could be stated explicitly that H is the Hadamard operator and Z a Pauli matrix. The formula $Z(Mθ) = e^{iM\theta Z}$ has been given but it has not been explained what Z is on the right-hand side of the equality.
+> 7) The circuit on page 1 could have a figure number and a caption. It could be stated explicitly that $H$ is the Hadamard operator and $Z$ a Pauli matrix. The formula $Z(M \theta) = e^{iM\theta Z}$ has been given but it has not been explained what $Z$ is on the right-hand side of the equality.
 
-TODO
+We have explicitly defined $H$, $M$ and $Z$ in our revisions.
 
-> 8)  Page 4 states “This model is appropriate when the time required to implement the controlled operation Λ(U) is long...” But the operation Λ has not been deﬁned. Is Λ(U) the same as $U^M$ on page 1?
+> 8)  Page 4 states “This model is appropriate when the time required to implement the controlled operation $\Lambda(U)$ is long...” But the operation $\Lambda$ has not been defined. Is $\Lambda(U)$ the same as $U^M$ on page 1?
 
 Though $\Lambda(U)$ is somewhat commonly used to denote the controlled application of $U$, we have revised our manuscript to be more explicit.
  
