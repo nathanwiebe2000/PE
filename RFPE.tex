@@ -355,7 +355,7 @@ required~\cite{wiebe_hamiltonian_2014},
     M &= \left\lceil\frac{1.25}{\sigma}\right\rceil,~
     \theta \sim P(\phi).\label{eq:PGH}
 \end{align}
-The constant $1.25$ is empirically chosen to minimize the cost of RFPE.
+The constant $1.25$ is empirically chosen to reduce the cost of RFPE.
 
 
 
@@ -406,8 +406,8 @@ tradeoff experimental and computational resources differently.  This is especial
     }
 \end{figure*}
 
-If we instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
-then we recover the  (or in the case where $M$ is continuous, the total evolution time required).
+We can instead cost the algorithm by the total number of applications of $U$ needed to learn the phase
+(or in the case where $M$ is continuous, the total evolution time required).
 In this case, we expect from the Heisenberg bound that the error should optimally scale as $1/T=1/\sum_i M_i$.
 \fig{rms} shows that, over $100$ orders of magnitude in the target error tolerance, this scaling is saturated for RFPE.  We further observe that the mean error, the
 root-mean square error and a $95\%$ confidence interval for the error follow an optimal $O(1/T)$ scaling.
@@ -646,7 +646,7 @@ interpret and can lead to misunderstandings \cite{goodman_dirty_2008,hoekstra_ro
 alternative, one may prefer to use the Bayes factor to test whether the rejection
 filter has failed. For example, the rejection filter could fail due to
 a failure of the numerical approximation or because the eigenstate has
-been lost, as described in the main body. For a uniform prior over
+been lost, as described \app{var-reduction}. For a uniform prior over
 whether the rejection filter has failed, this reduces to the likelihood
 ratio test
 \begin{subequations}
@@ -731,7 +731,7 @@ This is significant if RFPE is being used, for example, to learn an instantaneou
 are slowly drifting out of calibration.  By learning such drifts in an online fashion, this algorithm allows adaptive feedback to compensate for this
 drift and in turn can allow the quantum device to be used even if it has substantially changed since the experimental run began.
 
-Before continuing it is important to distinguish between two ways that time--dependent Eigenphases can be examined.  The simplest approach is through hyperparameter estimation, wherein the inference process is used to learn a hyperparameter that describes the diffusion of the true eigenphase.  This can be done by introducing such a parameter into the inference problem and applying RFPE as above.  The method we favor here is different: we wish to provide an instantaneous estimate of the eigenphase.  This yields no explicit information about the extent to which eigenphases diffuse in typical cases, but it does provide the information needed to track the current value.
+Before continuing it is important to distinguish between two ways that time--dependent eigenphases can be examined.  The simplest approach is through hyperparameter estimation, wherein the inference process is used to learn a hyperparameter that describes the diffusion of the true eigenphase.  This can be done by introducing such a parameter into the inference problem and applying RFPE as above.  The method we favor here is different: we wish to provide an instantaneous estimate of the eigenphase.  This yields no explicit information about the extent to which eigenphases diffuse in typical cases, but it does provide the information needed to track the current value.
 
 In principle including time--dependence in this manner is trivial since it does not require positing a dynamical model for the model parameters (unlike the hyperparameterized version).
 It simply involves running RFPE without modification since ideally the algorithm should continue to track the eigenphase provided the experimental drift does not take the system beyond the 
