@@ -873,7 +873,7 @@ particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the 
 \begin{algorithmic}
         \Require Prior \CRej state, records of all previous models found in the phase estimation algorithm $\mu$, $\vec{\sigma}$, initial standard deviation $\sigma_{\rm init}$, $M$, $T_2$, a counter $\text{CNT}$, a maximum value of $\text{CNT}$ $\text{MAXCNT}$, $\Gamma$ and $\tau$.
 	\Ensure $\text{CNT}$, $\sigma$ 
-        \Function{$\text{Restart}$}{${\mu}$, $\vec \sigma$,$\sigma_{\rm init}$, $M$, $T_2$, $\text{CNT}$, $\Gamma$, $\tau$}
+        \Function{$\text{Restart}$}{${\mu}$, $\vec \sigma$,$\sigma_{\rm init}$, $M$, $T_2$, $\text{CNT}$, $\text{MAXCNT}$, $\Gamma$, $\tau$}
 	\State $D \gets$ derivative of $\log{\sigma}$.
 	\If {($D\ge \Gamma$ and $\text{CNT}\ge {\rm MAXCNT}$) or rand()$>\exp(-M/T_2)$}\Comment{Checks to see if the eigenstate is suspect.}
 		\State Perform experiment with $M=\tau/\sigma$ and $\theta=\mu$.
