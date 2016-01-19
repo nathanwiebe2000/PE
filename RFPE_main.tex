@@ -86,7 +86,8 @@
 
 \newcommand{\eq}[1]{\hyperref[eq:#1]{(\ref*{eq:#1})}}
 \renewcommand{\sec}[1]{\hyperref[sec:#1]{Section~\ref*{sec:#1}}}
-\newcommand{\app}[1]{\hyperref[app:#1]{Appendix~\ref*{app:#1}}}
+%\newcommand{\app}[1]{\hyperref[app:#1]{Appendix~\ref*{app:#1}}}
+\newcommand{\app}[1]{the supplentary material}
 \newcommand{\fig}[1]{\hyperref[fig:#1]{Figure~\ref*{fig:#1}}}
 \newcommand{\thm}[1]{\hyperref[thm:#1]{Theorem~\ref*{thm:#1}}}
 \newcommand{\lem}[1]{\hyperref[lem:#1]{Lemma~\ref*{lem:#1}}}
@@ -158,10 +159,9 @@ Proof of~#1.}}
     We provide a new efficient adaptive algorithm for performing phase
     estimation that does not require that the user infer the bits of the
     eigenphase in reverse order; rather it directly infers the phase and
-    estimates the uncertainty in the phase directly from experimental data. Our
-    method is highly flexible, recovers from failures, and can be run in the
-    presence of substantial decoherence and other experimental imperfections
-    and is as fast or faster than existing algorithms.
+    estimates the uncertainty in the phase directly from experimental data.  It is highly flexible, recovers from failures, and can be run in the
+    presence of decoherence and other experimental imperfections
+    and is as fast or faster than existing methods that are classically efficient.
 \end{abstract}
 
 \maketitle
@@ -505,6 +505,7 @@ further improvements can be seen not only in phase estimation but also quantum m
 \bibliography{CRPE}
 %=====================================================================
 
+\end{document}
 \pagebreak
 \appendix
 
