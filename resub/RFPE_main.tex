@@ -174,7 +174,7 @@ While great progress has been made towards optimizing phase estimation, a number
 %for the algorithm to be practical for this application, the phase estimation algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
 %This excludes many existing iterative phase estimation methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,BHB+09,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
 
-Here we address these shortcomings by proposing an approach to iterative phase estimation that is based on a new inference method that we call \emph{rejection filtering}.  Similarly we call the phase estimation algorithm that follows rejection filtering phase estimation or \emph{RFPE}.  Our algorithm numerically approximates Bayesian inference on the measurement outcomes to estimate the most likely phase and its uncertainty.  Unlike the numerical methods for Bayesian inference studied in~\cite{granade_robust_2012, stenberg_efficient_2014}, the method has miniscule memory requirements which permits it to be employed in a memory limited environment like a field programmable gate array (FPGA).  Our algorithm also inherits from Bayesian inference the ability follow drifting eigenphases without needing to explicitly model the dynamics of the phase.  Finally, we propose a novel method for detecting and correcting inference errors that allows the method to track a state's depolarization in real time.  These new capabilities constitute an important advance for the field and underscore the relevance of approximate Bayesian inference to physics.
+Here we address these shortcomings by proposing an approach to iterative phase estimation that is based on a new inference method that we call \emph{rejection filtering}, and by providing an efficient heuristic for adaptively selecting near-optimal experiments. We call the phase estimation algorithm that follows from rejection filtering phase estimation or \emph{RFPE}.  Our algorithm numerically approximates Bayesian inference on the measurement outcomes to estimate the most likely phase and its uncertainty.  Unlike the numerical methods for Bayesian inference studied in~\cite{granade_robust_2012, stenberg_efficient_2014}, the method has miniscule memory requirements which permits it to be employed in a memory limited environment like a field programmable gate array (FPGA).  Our algorithm also inherits from Bayesian inference the ability follow drifting eigenphases without needing to explicitly model the dynamics of the phase.  Finally, we propose a novel method for detecting and correcting inference errors that allows the method to track a state's depolarization in real time.  These new capabilities constitute an important advance for the field and underscore the relevance of approximate Bayesian inference to physics.
 %
 %RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 %is robust to experimental imperfections such as depolarizing noise  and
@@ -191,7 +191,7 @@ $U\in \mathbb{C}^{2^n \times 2^n}$ from a set of experiments that are performed 
 \end{equation*}
 where $H$ is the Hadamard gate, $U\ket{\phi} = \ee^{\ii\phi}\ket{\phi}$ for an unknown eigenphase $\phi \in \mathbb{R}$, $\ket{\phi}\in \mathbb{C}^{2^n}$, 
 $M\in\mathbb{N}$ specifies how many applications of $U$ are applied conditioned on the ancilla qubit being $1$,
-and where $Z(M \theta) = \ee^{\ii M \theta Z}$ for  Pauli--$Z$ operator, $Z$, is a rotation that can be used to compare the eigenphase of $U$ to
+and where $Z(M \theta) = \ee^{\ii M \theta Z}$ for the Pauli operator $Z$ is a rotation that can be used to compare the eigenphase of $U$ to
 a known reference value.  Most iterative phase estimation algorithms use this circuit to infer the bits
 in a binary expansion of $\phi$.  The process can be made optimal (up to $\log^*$ factors~\cite{SHF14}) and
 also classically efficient.
@@ -337,7 +337,7 @@ This can be avoided using precomputed
 measurement settings
 \cite{sergeevich_characterization_2011}
 or \emph{policies} \cite{hentschel_machine_2010,hayes_swarm_2014}, which
-can substnatially reduce the computational time needed to perform an online inference. These approaches,
+can substantially reduce the computational time needed to perform an online inference. These approaches,
 however, \emph{a priori} limit the number of measurements to
 be performed, and can require significant amounts of memory to store the policy.
 
@@ -427,7 +427,7 @@ We model the effect of decoherence on the system by assuming the existence of a 
         P(1|\phi) & = \ee^{-M/T_2}\left(\frac{1-\cos(M[\phi -\theta])}{2}\right)+\frac{1-\ee^{-M/T_2}}{2}.
     \end{aligned}
 \end{gather}
-This model is appropriate when a controlled $U$ gate is slow relative to the $H$ and $Z$- -rotation gates, as is appropriate in quantum simulation.  %We assume in the following that $T_2$ is known. 
+This model is appropriate when a controlled $U$ gate is slow relative to the $H$ and $Z$-rotation gates, as is appropriate in quantum simulation.  %We assume in the following that $T_2$ is known. 
  
 
 Since $T_2$ places a limitation on our ability to learn, we propose a variation to \eq{PGH},

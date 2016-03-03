@@ -139,7 +139,7 @@ We have updated these references.
 > the introduction and abstract to clearly explain the advances their
 > work makes.
 
-We thank the referee for their assessment, and have taken efforts to make our case more clearly in our current revisons. In particular, we have implemented the referee's suggestions (below), and have reworded much of our introduction to more clearly identify the contributions made by our manuscript. We believe that with our revisions, our work should be significantly more accessible to expert and non-expert readers alike, and should elucidate the advantages of rejection filtering.
+We thank the referee for their assessment, and have taken efforts to make our case more clearly in our current revisons. In particular, we have implemented the referee's suggestions (below), and have reworded much of our introduction to more clearly identify the contributions made by our manuscript. We believe that by mentioning all three of our contributions explicitly in our new introduction, our work should be significantly more accessible to expert and non-expert readers alike, and should elucidate the advantages of rejection filtering phase estimation.
 
 > Small suggestions: * Below the circuit diagram the controlled unitary
 > is not explained neither is the "/" . Remember PRL will have non
