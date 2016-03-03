@@ -171,11 +171,11 @@ Proof of~#1.}}
 \label{sec:intro}
 %=============================================================================
 
-Eigenvalue estimation has been a cornerstone of physics since the dawn of spectroscopy.  In recent years, ideas from quantum information have revolutionized the ways that we estimate these values by providing methods that require exponentially fewer experiments than statistical sampling and total experimental time that saturates the Heisenberg limit~\cite{berry_optimal_2000,higgins2007entanglement,hentschel_machine_2010}, which is the best possible scaling allowed by quantum mechanics.  This quantum approach, known as phase estimation (PE), is crucial to acheive many of the celebrated speedups promised by quantum computing~\cite{shor_polynomial-time_1995,BHM+02,ADL+05,harrow2009quantum,lanyon2010towards}.
+Eigenvalue estimation has been a cornerstone of physics since the dawn of spectroscopy.  In recent years, ideas from quantum information have revolutionized the ways that we estimate these values by providing methods that require exponentially fewer experiments than statistical sampling and total experimental time that saturates the Heisenberg limit~\cite{berry_optimal_2000,higgins2007entanglement,BHB+09,hentschel_machine_2010}, which is the best possible scaling allowed by quantum mechanics.  This quantum approach, known as phase estimation (PE), is crucial to acheive many of the celebrated speedups promised by quantum computing~\cite{shor_polynomial-time_1995,BHM+02,ADL+05,harrow2009quantum,lanyon2010towards}.
 
 The need for efficient PE algorithms is especially poignant for Shor's algorithm~\cite{shor_polynomial-time_1995}, wherein the unknown eigenphases must be estimated to hundreds of bits of precision.  In order
 for the algorithm to be practical for this application, the PE algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
-This excludes many existing iterative PE (IPE) methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
+This excludes many existing iterative PE (IPE) methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,BHB+09,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
 
 Here we address this gap by proposing a new approach to IPE that is based on a new inference method that we call \emph{rejection filtering} (RF).  Similarly we call the PE algorithm that follows from using RF, \emph{RFPE}.  RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 is robust to experimental imperfections such as depolarizing noise  and
@@ -184,7 +184,7 @@ small systematic errors, reports the uncertainty in the estimate of the phase, c
 Before going into detail about our algorithm we will first review the IPE circuit and Bayesian approaches to PE.  We then show that rejection
 sampling can be used to efficiently approximate Bayesian inference, thereby
 allowing PE to inherit the speed and robustness of Bayesian approaches while
-retaining the efficiency of traditional methods.
+remaining efficient.
 
 IPE infers the eigenvalue of a given eigenvector of a unitary matrix
 $U$ from a set of experiments that are performed on the circuit

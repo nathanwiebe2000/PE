@@ -225,7 +225,7 @@ After restart, if eigenvalue $\lambda$ is known with uncertainty $\sigma_\lambda
 %=============================================================================
 
 
-Our algorithm is not only robust against well-known depolarizing noise but is robust against~\emph{uncharacterized noise sources} as well.
+Our algorithm is not only robust against well-known depolarizing noise but is robust against errors in the assumed likelihood function.
 That is, by using rejection filtering, we retain the robustness previously shown for particle filtering
 in quantum information applications \cite{ferrie_likelihood-free_2014,wiebe_quantum_2014-1,stenberg_efficient_2014}.
 We demonstrate this in~\fig{gamma} wherein we introduce depolarizing noise of strength $\gamma$ to our experimental system, but do not include such noise in the likelihood function.  For example, with $\gamma=0.4$, the measurement outcome of phase estimation is replaced with a random bit with probability $40\%$.  Although this may seem qualitatively similar to the numerical examples for depolarizing noise considered in the main body of the paper, this case is much more pathological because it is only used to generate the experimental data and is not permitted in the model of the system used in the likelihood function.  This raises the possibility that the algorithm could become confused due to experimental results that are fundamentally inconsistent with the assumed likelihood function for the system.
