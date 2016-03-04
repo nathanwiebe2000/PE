@@ -1,4 +1,4 @@
-\documentclass[aps,pra,amsmath,twocolumn,amssymb,superscriptaddress]{revtex4-1}
+\documentclass[aps,prl,amsmath,twocolumn,amssymb,superscriptaddress]{revtex4-1}
 %=============================================================================
 % BEGIN UNFORGIVABLE HACKS
 %=============================================================================
@@ -156,7 +156,7 @@ Proof of~#1.}}
 \affiliation{School of Physics, University of Sydney, Sydney, NSW (Australia)}
 
 \begin{abstract}
-We introduce a new method called rejection filtering that we use to perform adaptive Bayesian phase estimation.  Our approach has several advantages: it is classically efficient, easy to implement, achieves Heisenberg limited scaling, resists depolarizing noise, tracks time dependent eigenstates, recovers from failures and can be run on an FPGA.  It also outperforms existing methods such as Kitaev's method and information theory phase estimation.
+We introduce a new method called rejection filtering that we use to perform adaptive Bayesian phase estimation.  Our approach has several advantages: it is classically efficient, easy to implement, achieves Heisenberg limited scaling, resists depolarizing noise, tracks time dependent eigenstates, recovers from failures and can be run on an FPGA.  It also outperforms existing iterative phase estimation algorithms such as Kitaev's method.
 \end{abstract}
 
 \maketitle
@@ -168,13 +168,13 @@ We introduce a new method called rejection filtering that we use to perform adap
 
 Eigenvalue estimation has been a cornerstone of physics since the dawn of spectroscopy.  In recent years, ideas from quantum information have revolutionized the ways that we estimate these values by providing methods that require exponentially fewer experiments than statistical sampling and total experimental time that saturates the Heisenberg limit~\cite{Kit96,berry_optimal_2000,kitaev2002classical,higgins2007entanglement,BHB+09,GTA+06,hentschel_machine_2010,SHF14}, which is the best possible scaling allowed by quantum mechanics.  This quantum approach, known as phase estimation, is crucial to acheive many of the celebrated speedups promised by quantum computing~\cite{shor_polynomial-time_1995,BHM+02,ADL+05,harrow2009quantum,lanyon2010towards}.
 
-While great progress has been made towards optimizing phase estimation, a number of gaps remain.  Most notably, existing approaches either require a large number of ancilla qubits, are classically inefficient or fail to extract information about the phase as efficiently as their classically inefficient brethren.  Moreover, the majority of these methods are not analyzed in the presence of noise or other experimental imperfections.  Finally, these approaches typically assume that the phase is static, or quasi-static, throughout the experiment.  This precludes phase estimation from tracking time dependent drifts in phase.  These gaps mean that many phase estimation algorithms are not known to be robust enough to be used in many modern day experiments.
+While great progress has been made towards optimizing phase estimation, a number of gaps remain.  Most notably, existing approaches either require a large number of ancilla qubits, are classically inefficient or fail to extract information about the phase as efficiently as their classically inefficient brethren.  Moreover, the majority of these methods are not analyzed in the presence of noise or other experimental imperfections.  Finally, these approaches typically assume that the phase is static, or quasi-static, throughout the experiment.  This precludes phase estimation from tracking time dependent drifts in phase.  These gaps mean that many phase estimation algorithms are not known to be robust to common errors present in modern day experiments.
 
 %The need for efficient phase estimation algorithms is especially poignant for Shor's algorithm~\cite{shor_polynomial-time_1995}, wherein the unknown eigenphases must be estimated to hundreds of bits of precision.  In order
 %for the algorithm to be practical for this application, the phase estimation algorithm must only use a logarithmic number of measurements and the classical processing used to infer the phase must also be efficient.
 %This excludes many existing iterative phase estimation methods that achieve logarithmic scaling.  Other methods are both classically and quantumly efficient~\cite{Kit96,kitaev2002classical,higgins2007entanglement,BHB+09,SHF14}, but often fail to extract information about the phase as efficiently as their classically inefficient brethren or require many ancilla qubits.
 
-Here we address these shortcomings by proposing an approach to iterative phase estimation that is based on a new inference method that we call \emph{rejection filtering}, and by providing an efficient heuristic for adaptively selecting near-optimal experiments. We call the phase estimation algorithm that follows from rejection filtering phase estimation or \emph{RFPE}.  Our algorithm numerically approximates Bayesian inference on the measurement outcomes to estimate the most likely phase and its uncertainty.  Unlike the numerical methods for Bayesian inference studied in~\cite{granade_robust_2012, stenberg_efficient_2014}, the method has miniscule memory requirements which permits it to be employed in a memory limited environment like a field programmable gate array (FPGA).  Our algorithm also inherits from Bayesian inference the ability follow drifting eigenphases without needing to explicitly model the dynamics of the phase.  Finally, we propose a novel method for detecting and correcting inference errors that allows the method to track a state's depolarization in real time.  These new capabilities constitute an important advance for the field and underscore the relevance of approximate Bayesian inference to physics.
+Here we address these shortcomings by proposing an approach to iterative phase estimation that is based on a new inference method that we call \emph{rejection filtering}, and by providing an efficient heuristic for adaptively selecting near-optimal experiments. We call the phase estimation algorithm that follows from rejection filtering phase estimation or \emph{RFPE}.  Our algorithm numerically approximates Bayesian inference on the measurement outcomes to estimate the most likely phase and its uncertainty.  Unlike the numerical methods for Bayesian inference studied in~\cite{granade_robust_2012, stenberg_efficient_2014}, the method has miniscule memory requirements which permit it to be employed in a memory limited environment like a field programmable gate array (FPGA).  Our algorithm also inherits from Bayesian inference the ability follow drifting eigenphases without needing to explicitly model the dynamics of the phase.  Finally, we propose a novel method for detecting and correcting inference errors that allows the method to track a state's depolarization in real time.  These new capabilities constitute an important advance for the field and underscore the relevance of approximate Bayesian inference to physics.
 %
 %RFPE is classically efficient, requires a logarithmic number of operations, saturates the Heisenberg bound, 
 %is robust to experimental imperfections such as depolarizing noise  and
@@ -212,17 +212,17 @@ also classically efficient.
 %=============================================================================
 
 Bayesian phase estimation involves performing a 
-set of experiments and then updating the prior distribution using Bayes' rule
+set of experiments and then updating a prior distribution over the true eigenphase using Bayes' rule
 \cite{berry_optimal_2000,berry_optimal_2001,SHF14}.
-For example, if an experiment is performed with using $M$ repetitions of $U$,
-$Z(M \theta)$ and a measurement outcome $E\in \{0,1\}$ is observed then Bayes'
+For example, if an experiment is performed using $M$ repetitions of $U$,
+$Z(-M \theta)$ and a measurement outcome $E\in \{0,1\}$ is observed then Bayes'
 rule states that the \emph{posterior probability} distribution for $\phi$
 after observing the datum is
 \begin{equation}
 P(\phi|E;\theta,M) = \frac{P(E|\phi;\theta,M)P(\phi)}{\int P(E|\phi;\theta,M)P(\phi)\mathrm{d}{\phi}}.\label{eq:update}
 \end{equation}
 The likelihood
-function for phase estimation, $P(0|\phi;\theta,M)$,  is
+function  $P(0|\phi;\theta,M)$,  is
 \begin{gather}
     \label{eq:likenodecohere}
     \begin{aligned}
@@ -235,8 +235,8 @@ that assumption can be readily relaxed \cite{ferrie_how_2013,cappellaro_spin_201
 we consider the perfect visibility case for clarity.
 After using~\eq{update} to update the posterior distribution we then set the prior distribution to equal the posterior distribution.  This process is then repeated for each of the experiments in the data set.
 
-Unlike conventional methods, Bayesian inference returns a posterior
-distribution over the phase. The mean and standard deviation of this
+Bayesian inference returns a posterior
+distribution over the phase rather than a point estimate. The mean and standard deviation of this
 distribution provide an estimate of the true eigenvalue and the algorithm's
 uncertainty in that value. More sophisticated estimates of uncertainty, such
 as credible regions, can also be extracted from the posterior
@@ -272,13 +272,13 @@ have become a mainstay in computer vision and machine
 learning~\cite{haykin2004kalman,smith2013sequential,isard_condensationconditional_1998}.
 
 
-Despite the power of these methods, they are hard to implement and even
+Despite their power, these methods are hard to implement and even
 harder to deploy in a memory limited environment such as on an embedded
 controller or an FPGA. With the increasing use of FPGAs in the control of
 quantum information experiments
 \cite{shulman_suppressing_2014,casagrande_design_2014,hornibrook_cryogenic_2015},
 overcoming this limitation presents a
-significant advantage to modern experiment design. 
+significant advantage. 
 
 RFPE follows a much simpler approach. Rather than using a set of hypotheses that implicitly
 define a model for the system, we posit a prior model and directly update it
@@ -324,7 +324,7 @@ which implies that the accepted samples are drawn from the posterior distributio
 Although it is difficult to concretely predict the value of $m$ needed to make the error in the inference small, we show in \app{stability} that $m$ must scale at least as the inverse square of the relative fluctuations in the likelihood function.  Similarly, Markov's inequality shows that $m$ must scale at least as $\kappa_E/\int P(E|\phi;\theta,M)P(\phi) \mathrm{d}\phi$ to ensure that, with high probability, the mean can be accurately estimated from the accepted samples.  We introduce $\kappa_E$ to compensate for small expected likelihoods.
 
 \begin{figure}[t!]
-\includegraphics[width=0.9\linewidth]{Longpet2.pdf}
+\includegraphics[width=0.8\linewidth]{Longpet2.pdf}
 \caption{Median error vs evolution time for rejection filter phase estimation for the case where $M$ is continuous and $T=\sum_i M_i$.  The median error scales roughly as $4.7/T$, and the dashed lines in the inset figure give a $95\%$ confidence interval.}\label{fig:rms}
 \end{figure}
 
@@ -337,9 +337,8 @@ This can be avoided using precomputed
 measurement settings
 \cite{sergeevich_characterization_2011}
 or \emph{policies} \cite{hentschel_machine_2010,hayes_swarm_2014}, which
-can substantially reduce the computational time needed to perform an online inference. These approaches,
-however, \emph{a priori} limit the number of measurements to
-be performed, and can require significant amounts of memory to store the policy.
+can substantially reduce the computational time needed to perform an online inference. These approaches \emph{a priori} limit the number of measurements to
+be performed and can require significant memory to store the policy.
 
 Fortunately, the particle guess heuristic (PGH) can give
 expedient and
@@ -417,7 +416,7 @@ RFPE therefore saturates optimal scaling in this setting as well.
 \subsection{Phase estimation with depolarizing noise}
 A criticism that has been levied lately at phase estimation methods is that they can be impractical to execute on non--fault tolerant quantum hardware~\cite{PMS+14,MBL+14,WHT15}.  This is because phase estimation attains its quadratic advantage over statistical sampling by using exponentially long evolutions.  Decoherence causes the resultant phases to become randomized as time progresses, ultimately resulting in
 $\lim_{M\rightarrow \infty} P(0|\phi;\theta,M) = \frac{1}{2}$.
-Measurements convey no information in this limit.  It similarly may be tempting to think that decoherence fundamentally limits the accuracy of phase estimation.   Bayesian inference to can, however, estimate $\phi$ using experiments with $M \approx T_2$~\cite{granade_robust_2012} for some noise models.  
+Measurements convey no information in this limit.  It similarly may be tempting to think that $T_2$ fundamentally limits the accuracy of phase estimation.   Bayesian inference can, however, learn $\phi$ using $M \approx T_2$~\cite{granade_robust_2012} for some noise models.  
 
 We model the effect of decoherence on the system by assuming the existence of a \emph{decoherence time} $T_2$ such that
 \begin{gather}
@@ -427,7 +426,7 @@ We model the effect of decoherence on the system by assuming the existence of a 
         P(1|\phi) & = \ee^{-M/T_2}\left(\frac{1-\cos(M[\phi -\theta])}{2}\right)+\frac{1-\ee^{-M/T_2}}{2}.
     \end{aligned}
 \end{gather}
-This model is appropriate when a controlled $U$ gate is slow relative to the $H$ and $Z$-rotation gates, as is appropriate in quantum simulation.  %We assume in the following that $T_2$ is known. 
+This model is appropriate when a controlled $U$ gate is slow relative to the $H$ and $Z$-rotation gates.  %We assume in the following that $T_2$ is known. 
  
 
 Since $T_2$ places a limitation on our ability to learn, we propose a variation to \eq{PGH},
@@ -446,7 +445,7 @@ The choice to cut off $M$ at $T_2$ can be understood using the following argumen
 \section{Tracking Eigenphases}
 %=============================================================================
 
-\fig{T2plot} shows the performance of RFPE when the initial quantum state is an eigenstate and is discarded after each experiment.  Performing phase estimation in this way minimizes the number of experiments, but can be expensive if initial preparation is costly.  In such cases, it makes sense to follow the standard prescription for phase estimation by keeping the quantum state until it is clear that the initial eigenstate has been depolarized.  These depolarizations can cause RFPE to become confused because the new data that comes in is only consistent with hypotheses that have been ruled out.  We address this by performing inexpensive experiments to assess whether the state has depolarized and then restart the learning process. Restarting can even be valuable when $T_2=0$ to recover if the RFPE becomes stuck (see \app{var-reduction}).
+\fig{T2plot} shows the performance of RFPE when the initial quantum state is an eigenstate and is discarded after each experiment.  Performing phase estimation in this way minimizes the number of experiments, but can be expensive if initial preparation is costly.  In such cases, it makes sense to follow the standard prescription for phase estimation by keeping the quantum state until it is clear that the initial eigenstate has been depolarized.  These depolarizations can cause RFPE to become confused because the new data that comes in is only consistent with hypotheses that have been ruled out.  We address this by performing inexpensive experiments to assess whether the state has depolarized and then restart the learning process. Restarting is also valuable when $T_2=0$ to recover from inference errors (see \app{var-reduction}).
 
 The following procedure addresses this issue% in cases where the spectral gaps are promised to be at least $\Delta$.
 \begin{enumerate}
@@ -464,7 +463,7 @@ If $\tau=0.1$ then this probability is approximately $0.998$ and hence measuring
 is given in \app{bf}.
 
 
-The test process also permits the eigenvalue of an eigenstate in a decohering system to be estimated in real time. \fig{Errplot} shows that the restarting algorithm can rapidly detect a transition away from the instantaneous eigenstate and then begin inferring the eigenvalue of the system's new instantaneous eigenstate.  
+The test process also permits the eigenvalue of an eigenstate in a decohering system to be estimated in real time. \fig{Errplot} shows that the restarting algorithm can rapidly detect a transition from the instantaneous eigenstate and infer the system's new eigenphase.  
 
 %=============================================================================
 \section{Conclusion}

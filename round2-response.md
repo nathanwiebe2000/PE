@@ -39,14 +39,14 @@ We apologize for this oversight, and have addressed the issue.
 > the SMC approximation, but also because of the fact that we assume
 > that the strength of the depolarizing noise is known.”
 
-The referee is correct that in the particular example that they quoted, the strength of the depolarizing noise was taken to be known, and moreover, that this provided the SMC approximation a large degree of robustness. In particular, we agree with the referee that we did not make clear the insight we drew from these citations, namely that SMC exhibits a large degree of robustness to violations of assumptions made at the level of models. In light of the referee's comments, we have clarified our wording here.
+The referee is correct that in the particular example that they quoted, the strength of the depolarizing noise was taken to be known, and moreover, that this provided the SMC approximation a large degree of robustness. In particular, we agree with the referee that we did not make clear the insight we drew from these citations, namely that SMC exhibits a large degree of robustness to violations of assumptions made at the level of models. In light of the referee's comments, we have clarified our wording here to emphasize that the robustness is intended to be against errors in the underlying likelihood function.
 
 > 11) It appears the authors did not notice comment 11 of my first
 > report “In Fig. 3 the curves continue up to the experiment number 10^3
 > but the axes extend to 10^4.” The empty space in the current figure 4
 > (on the right-hand side) should be cutted out.
 
-**(I have no idea what he means by this.)**
+We have made this change.
 
 > 15) In the introduction, it is stated that “Our approach has several
 > advantages compared to traditional methods: it is classically
@@ -77,7 +77,7 @@ All references in the main text of our revised manuscript are cited within the m
 > protocol is taken in Figure ?? wherein…” the correct figure number is
 > missing (it has been replaced by question marks).
 
-**TODO**
+The reference to the figure has been corrected.
 
 > 19) For reference [29], rather than the arXiv version, it would be
 > better to cite the version published in PRA 92, 042303 (2015).
@@ -153,3 +153,5 @@ We thank the referee for their assessment, and have taken efforts to make our ca
 > *Consider appropriately citing the relevant work by Giedke et al
 > "Quantum measurement of a mesoscopic spin ensemble" Phys. Rev. A 74,
 > 032316 (2006)
+
+We have cited this work and also clarified the circuit diagram along with providing a reference to Nielsen and Chuang for the non-expert.
