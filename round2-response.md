@@ -1,6 +1,12 @@
+We thank the referees for their time and their helpful feedback. In light of the referees' comments, we have revised our manuscript to more clearly detail our contributions, and to make our work more accessible. Below, we detail our responses to each of the referee's comments, as well as the revisions we have made to improve our work accordingly
+
+Thank you,
+
+Nathan Wiebe
+Christopher Granade
 
 
-# Second Report of Referee A -- LK14833/Wiebe #
+# Referee A #
 
 > By emphasizing the simplicity of their method and its compatibility
 > with memory limited environments, the authors have made their case for
@@ -88,7 +94,7 @@ The reference to the figure has been corrected.
 
 We have updated these references.
 
-# Report of Referee B -- LK14833/Wiebe #
+# Referee B #
 
 > Bayesian methods for, estimation and discrimination, have a long
 > history in quantum theory going back (at least) to the 1970s. In the
