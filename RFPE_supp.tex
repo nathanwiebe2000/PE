@@ -450,7 +450,7 @@ Thus after $k$ updates if we assume that the initial distribution is approximate
 \begin{equation}
 \Delta \phi_k \ge \frac{\pi}{\sqrt{3(\kappa^2+1)^k}}.
 \end{equation}
-Setting $\frac{\pi}{\sqrt{3(\kappa^2+1)^k}} = \epsilon$ and inverting this equation gives
+Setting $\frac{\pi}{\sqrt{3(\kappa^2+1)^k}} = \epsilon$ and solving this equation for the value of $k$ that gives error at least $\epsilon$, $k_{\max}$, yields
 \begin{equation}
 k_{\max} = \frac{2\ln(\pi/3\epsilon)+\ln(3)}{\ln(\kappa^2 +1)},
 \end{equation}
@@ -467,9 +467,9 @@ In the limit of small $\epsilon$ this becomes
 \end{equation}
 Through calculus it is then easy to see that the cost is minimized when $\kappa = \frac{1}{2} \sqrt{2 + 2 \sqrt{5}}$.  Substituing this value back into the cost gives the total time needed for the algorithm to be at least
 \begin{equation}
-\frac{\frac{\sqrt{2 + 2 \sqrt{5}} (1+\sqrt{5}}{2\sqrt{5}-2}}{\epsilon} \approx \frac{3.33}{\epsilon}.
+\frac{\frac{\sqrt{2 + 2 \sqrt{5}} (1+\sqrt{5})}{2\sqrt{5}-2}}{\epsilon}+O(1) \approx \frac{3.33}{\epsilon}.
 \end{equation}
-Our algorithm empirically scales as $4.7/\epsilon$, which suggests that our approach is nearly optimal given the use of Gaussian priors.
+Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors. 
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
