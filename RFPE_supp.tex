@@ -425,6 +425,53 @@ where $x$ is a Gaussian random variable with zero mean and unit standard deviati
 We see in~\fig{Timedep} that the error in the unknown eigenphase does not diverge with time.  Rather, it saturates at a level that is proportional to $\eta$.  This illustrates that RFPE is capable of tracking a time dependent eigenphase, although the drift in that eigenphase places limitations on the precision of the \emph{instantaneous} estimate of the phase.
 
 %=============================================================================
+\section{Optimal Scaling Under BCRB}
+\label{app:BCRB}
+%=============================================================================
+If we assume that Gaussian priors are always used in the inference process then we can use the Bayesian Cramer Rao bound (BCRB) to lower bound the variance on
+any unbiased estimate of the unknown phase.  We will see from this analysis that our algorithm is nearly optimal under these assumptions.
+
+If we define $(\Delta \phi)^2$ to be the expected variance of any unbiased estimate of $\phi$ given that $\phi$ is distributed according to a prior distribution $P(\phi)$ then the BCRB states
+\begin{equation}
+(\Delta \phi)^2 \ge \left(\int I(\phi) P(\phi) \mathrm{d} \phi + \int (\partial_\phi \log(P(\phi)))^2 P(\phi)\mathrm{d} \phi\right)^{-1},
+\end{equation}
+where $I(\theta)$ is the Fisher information. 
+
+While these expectation values are in general difficult to compute for general Bayesian inference, because we assume that the initial and final distributions are Gaussian we can analytically compute these integrals.  This allows us to lower bound the variance after each measurement and in turn lower bound the variance after $k$ updates to the prior distribution have been applied.  Specifically, under the assumption that $P(E|\phi) = \frac{1+cos(M(\theta-\phi))}{2}$ and $P(\phi) = \exp(-(\phi - \bar{\phi})^2 / 2\sigma^2)/\sqrt{2\pi}\sigma$ then it is easy to see that
+\begin{equation}
+(\Delta \phi)^2 \ge \frac{\sigma^2}{M^2 \sigma^2 +1}.
+\end{equation}
+
+Without loss of generality let us assume that $M=\kappa/\sigma$.  Because the problem is scale invariant (meaning that if $M\sigma$ is kept constant then the problem is exactly the same) choosing different ratios between $M$ and $\sigma$ for each experiments is suboptimal given that the prior distribution is always taken to be a Gaussian at each update.  For this reason we take a constant value of $\kappa$, which yields
+\begin{equation}
+(\Delta \phi)^2 \ge \frac{\sigma^2}{\kappa^2 +1}.
+\end{equation}
+Thus after $k$ updates if we assume that the initial distribution is approximately uniform then the uncertainty is at least
+\begin{equation}
+\Delta \phi_k \ge \frac{\pi}{\sqrt{3(\kappa^2+1)^k}}.
+\end{equation}
+Setting $\frac{\pi}{\sqrt{3(\kappa^2+1)^k}} = \epsilon$ and inverting this equation gives
+\begin{equation}
+k_{\max} = \frac{2\ln(\pi/3\epsilon)+\ln(3)}{\ln(\kappa^2 +1)},
+\end{equation}
+where $k_{\max}$ is the value of $k$ that saturates this bound.  
+
+Given these pieces of information we can now find the value of $\kappa$ that minimizes the total time used for the experiments.
+This cost is bounded below by
+\begin{equation}
+\sum_{k=1}^{\lceil k_{\max}\rceil} \frac{\kappa \sqrt{3(\kappa^2+1)^k} }{\pi} \ge \frac{1}{\sqrt{3}}\left(\frac{\kappa \sqrt{\kappa^2+1}(\pi \sqrt{3} -3 \epsilon)}{\epsilon \pi(\sqrt{\kappa^2+1}-1)} \right).
+\end{equation}
+In the limit of small $\epsilon$ this becomes
+\begin{equation}
+\frac{1}{\epsilon}\left(\frac{\kappa\sqrt{\kappa^2 +1}}{\sqrt{\kappa^2+1}-1}\right)+O(1)
+\end{equation}
+Through calculus it is then easy to see that the cost is minimized when $\kappa = \frac{1}{2} \sqrt{2 + 2 \sqrt{5}}$.  Substituing this value back into the cost gives the total time needed for the algorithm to be at least
+\begin{equation}
+\frac{\frac{\sqrt{2 + 2 \sqrt{5}} (1+\sqrt{5}}{2\sqrt{5}-2}}{\epsilon} \approx \frac{3.33}{\epsilon}.
+\end{equation}
+Our algorithm empirically scales as $4.7/\epsilon$, which suggests that our approach is nearly optimal given the use of Gaussian priors.
+
+%=============================================================================
 \section{Pseudocode for Algorithms}
 \label{app:pseudocode}
 %=============================================================================
