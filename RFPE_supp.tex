@@ -465,11 +465,11 @@ In the limit of small $\epsilon$ this becomes
 \begin{equation}
 \frac{1}{\epsilon}\left(\frac{\kappa\sqrt{\kappa^2 +1}}{\sqrt{\kappa^2+1}-1}\right)+O(1)
 \end{equation}
-Through calculus it is then easy to see that the cost is minimized when $\kappa = \frac{1}{2} \sqrt{2 + 2 \sqrt{5}}$.  Substituing this value back into the cost gives the total time needed for the algorithm to be at least
+Through calculus it is then easy to see that the cost is minimized when $\kappa = \frac{1}{2} \sqrt{2 + 2 \sqrt{5}}\approx 1.27$.  Substituing this value back into the cost gives the total time needed for the algorithm to be at least
 \begin{equation}
 \frac{\frac{\sqrt{2 + 2 \sqrt{5}} (1+\sqrt{5})}{2\sqrt{5}-2}}{\epsilon}+O(1) \approx \frac{3.33}{\epsilon}.
 \end{equation}
-Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors. 
+Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors although some caution should be used in directly comparing the median scaling of the error and the standard deviation of the errors used in the BCRB. 
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
@@ -488,6 +488,8 @@ We give pseudocode for the reset rule that we use in practice in our numerical e
 
 The choice of the evolution time and the inversion angle strongly impacts the efficiency of the learning algorithm.  We provide below code for a modified version of the
 particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the main body, we expect that choosing $M> T_2$ will typically lead to worse estimates of the eigenphase because the effects of decoherence overwhelm the information that can be gleaned from these long experiments.  As a result, we modify the particle guess heuristic  to never choose $M> T_2$.  We formally state this procedure in~\alg{pghT2}.
+
+\newpage
 
 
 \begin{figure}[h]
@@ -530,7 +532,7 @@ particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the 
     \end{algorithmic}
 \end{algorithm}
 \end{figure}
-
+\newpage
 % See http://tex.stackexchange.com/questions/231191/algorithm-in-revtex4-1
 % for details as to why this is in a {figure} and has [H].
 \begin{figure}[h]
@@ -570,7 +572,7 @@ particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the 
     \end{algorithmic}
 \end{algorithm}
 \end{figure}
-
+\newpage
 
 
 
@@ -628,8 +630,8 @@ particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the 
 \end{figure}
 
 %=====================================================================
-% \bibliographystyle{apsrev}
-% \bibliography{CRPE}
+ \bibliographystyle{apsrev}
+ \bibliography{CRPE}
 %=====================================================================
 
 \end{document}
