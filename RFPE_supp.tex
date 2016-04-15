@@ -21,7 +21,7 @@
 %=============================================================================
 
 \usepackage{xcite}
-    \externalcitedocument{RFPE_main}
+    \externalcitedocument{./resub/RFPE_main}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsfonts}
@@ -483,7 +483,7 @@ Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE usi
 in directly comparing the median scaling of the error and the square-root risk
 bounded here. This can be somewhat mitigated by using number of accepted particles
 $|\Phi_{\text{accept}}|$ as a diagnostic, by analogy to using the effective sample
-size of a particle filter to postselect.
+size of a particle filter to postselect \cite{hybrid_tomo_supp_mat}.
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
@@ -644,8 +644,8 @@ particle guess heuristic of~\cite{wiebe_hamiltonian_2014}.  As discussed in the 
 \end{figure}
 
 %=====================================================================
- \bibliographystyle{apsrev}
- \bibliography{CRPE}
+% \bibliographystyle{apsrev}
+% \bibliography{CRPE}
 %=====================================================================
 
 \end{document}
