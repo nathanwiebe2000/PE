@@ -481,7 +481,9 @@ Through calculus it is then easy to see that the cost is minimized when $\kappa 
 \end{equation}
 Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors. Some caution should be used, howver,
 in directly comparing the median scaling of the error and the square-root risk
-bounded here.
+bounded here. This can be somewhat mitigated by using number of accepted particles
+$|\Phi_{\text{accept}}|$ as a diagnostic, by analogy to using the effective sample
+size of a particle filter to postselect.
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
