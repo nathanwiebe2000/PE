@@ -428,28 +428,38 @@ We see in~\fig{Timedep} that the error in the unknown eigenphase does not diverg
 \section{Optimal Scaling Under BCRB}
 \label{app:BCRB}
 %=============================================================================
-If we assume that Gaussian priors are always used in the inference process then we can use the Bayesian Cramer Rao bound (BCRB) to lower bound the variance on
-any unbiased estimate of the unknown phase.  We will see from this analysis that our algorithm is nearly optimal under these assumptions.
 
-If we define $(\Delta \phi)^2$ to be the expected variance of any unbiased estimate of $\phi$ given that $\phi$ is distributed according to a prior distribution $P(\phi)$ then the BCRB states
+If we assume that Gaussian priors are always used in the inference process then
+we can use the Bayesian Cramer Rao bound (BCRB) to lower bound the variance on
+any unbiased estimate of the unknown phase.  We will see from this analysis that
+our algorithm is nearly optimal under these assumptions.
+
+Define the Bayes risk $r(\pi, \hat{\phi}) \mathrel{:=} \expect{(\phi - \hat{\phi})^2}{\phi\sim\pi}$
+to be the expected error of any estimator $\hat{\phi}$ of $\phi$,
+given that $\phi$ is distributed according to a prior distribution $\pi = P(\phi)$.
+Then the BCRB states that, assuming only that $\hat{\phi}$
+obeys regularity conditions, the risk is bounded by \cite{gill_applications_1995}
 \begin{equation}
-(\Delta \phi)^2 \ge \left(\int I(\phi) P(\phi) \mathrm{d} \phi + \int (\partial_\phi \log(P(\phi)))^2 P(\phi)\mathrm{d} \phi\right)^{-1},
+    r \ge \left(\int I(\phi) P(\phi) \mathrm{d} \phi + \int (\partial_\phi \log(P(\phi)))^2 P(\phi)\mathrm{d} \phi\right)^{-1},
 \end{equation}
 where $I(\theta)$ is the Fisher information. 
 
-While these expectation values are in general difficult to compute for general Bayesian inference, because we assume that the initial and final distributions are Gaussian we can analytically compute these integrals.  This allows us to lower bound the variance after each measurement and in turn lower bound the variance after $k$ updates to the prior distribution have been applied.  Specifically, under the assumption that $P(E|\phi) = \frac{1+cos(M(\theta-\phi))}{2}$ and $P(\phi) = \exp(-(\phi - \bar{\phi})^2 / 2\sigma^2)/\sqrt{2\pi}\sigma$ then it is easy to see that
+While these expectation values are in general difficult to compute for general Bayesian inference, because we assume that the initial and final distributions are Gaussian we can analytically compute these integrals.  This allows us to lower bound the risk after each measurement and in turn lower bound the risk after $k$ updates to the prior distribution have been applied.  Specifically, under the assumption that $P(E|\phi) = \frac{1+\cos(M(\theta-\phi))}{2}$ and $P(\phi) = \exp(-(\phi - \bar{\phi})^2 / 2\sigma^2)/\sqrt{2\pi}\sigma$ then it is easy to see that
 \begin{equation}
-(\Delta \phi)^2 \ge \frac{\sigma^2}{M^2 \sigma^2 +1}.
+    r \ge \frac{\sigma^2}{M^2 \sigma^2 +1}.
 \end{equation}
 
 Without loss of generality let us assume that $M=\kappa/\sigma$.  Because the problem is scale invariant (meaning that if $M\sigma$ is kept constant then the problem is exactly the same) choosing different ratios between $M$ and $\sigma$ for each experiments is suboptimal given that the prior distribution is always taken to be a Gaussian at each update.  For this reason we take a constant value of $\kappa$, which yields
 \begin{equation}
-(\Delta \phi)^2 \ge \frac{\sigma^2}{\kappa^2 +1}.
+    r \ge \frac{\sigma^2}{\kappa^2 +1}.
 \end{equation}
-Thus after $k$ updates if we assume that the initial distribution is approximately uniform then the uncertainty is at least
+Thus, if we assume that the initial distribution is approximately uniform, then the uncertainty
+after $k$ updates is at least
 \begin{equation}
-\Delta \phi_k \ge \frac{\pi}{\sqrt{3(\kappa^2+1)^k}}.
+    \Delta \phi_k \ge \frac{\pi}{\sqrt{3(\kappa^2+1)^k}},
 \end{equation}
+where we have defined $\Delta \phi_k$ to be the square-root risk after $k$ updates.
+
 Setting $\frac{\pi}{\sqrt{3(\kappa^2+1)^k}} = \epsilon$ and solving this equation for the value of $k$ that gives error at least $\epsilon$, $k_{\max}$, yields
 \begin{equation}
 k_{\max} = \frac{2\ln(\pi/3\epsilon)+\ln(3)}{\ln(\kappa^2 +1)},
@@ -469,7 +479,9 @@ Through calculus it is then easy to see that the cost is minimized when $\kappa 
 \begin{equation}
 \frac{\frac{\sqrt{2 + 2 \sqrt{5}} (1+\sqrt{5})}{2\sqrt{5}-2}}{\epsilon}+O(1) \approx \frac{3.33}{\epsilon}.
 \end{equation}
-Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors although some caution should be used in directly comparing the median scaling of the error and the standard deviation of the errors used in the BCRB. 
+Our algorithm empirically scales as $4.7/\epsilon$, which suggests that RFPE using the particle guess heuristic is nearly optimal given the use of Gaussian priors. Some caution should be used, howver,
+in directly comparing the median scaling of the error and the square-root risk
+bounded here.
 
 %=============================================================================
 \section{Pseudocode for Algorithms}
